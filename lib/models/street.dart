@@ -1,15 +1,15 @@
-import 'package:kralupy_streets/models/location.dart';
+import 'package:kralupy_streets/models/geolocation.dart';
 
 class Street {
   const Street({
     required this.id,
     required this.name,
     required this.imageUrl,
-    required this.location,
+    required this.geolocation,
   });
 
   final int id;
   final String name;
   final String imageUrl;
-  final Location location;
+  final Geolocation geolocation;
 }
