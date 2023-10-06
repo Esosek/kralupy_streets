@@ -18,7 +18,7 @@ class _GameScreenState extends State<GameScreen> {
   late QuizGenerator quizGenerator;
   late List<Question> questions;
 
-  int _currentQuestion = 1;
+  int _currentQuestion = 0;
   bool isAnswered = false;
   bool? isCorrect;
 
@@ -36,11 +36,11 @@ class _GameScreenState extends State<GameScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('$_currentQuestion z 5'),
+          title: Text('${_currentQuestion + 1} z ${questions.length}'),
         ),
         floatingActionButton: isAnswered
             ? FloatingActionButton(
-                onPressed: () => quizGenerator.generateQuestions(),
+                onPressed: () {},
                 child: const Icon(
                   Icons.navigate_next_rounded,
                   size: 35,
@@ -58,7 +58,7 @@ class _GameScreenState extends State<GameScreen> {
                     width: double.infinity,
                     color: Colors.grey.shade400,
                     child: Image.network(
-                      widget.streets[0].imageUrl,
+                      questions[_currentQuestion].correctAnswer.imageUrl,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) {
                           return child;
@@ -95,9 +95,8 @@ class _GameScreenState extends State<GameScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    StreetSign(widget.streets[0]),
-                    StreetSign(widget.streets[1]),
-                    StreetSign(widget.streets[2]),
+                    for (Street option in questions[_currentQuestion].options)
+                      StreetSign(option),
                   ],
                 ),
               ),
