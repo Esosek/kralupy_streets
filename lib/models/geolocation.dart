@@ -1,9 +1,9 @@
 class Geolocation {
   const Geolocation({
-    required this.lat,
-    required this.lng,
+    required this.latitude,
+    required this.longitude,
   });
 
-  final double lat;
-  final double lng;
+  final double latitude;
+  final double longitude;
 }
