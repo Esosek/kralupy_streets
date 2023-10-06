@@ -1,4 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:kralupy_streets/screens/home_screen.dart';
+
+final theme = ThemeData.light().copyWith(
+    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFC22011)),
+    textTheme: const TextTheme(
+      labelLarge: TextStyle(fontSize: 17),
+      labelMedium: TextStyle(fontSize: 13),
+    ));
 
 void main() {
   runApp(const MainApp());
@@ -9,12 +17,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      theme: theme,
+      home: const HomeScreen(),
     );
   }
 }
