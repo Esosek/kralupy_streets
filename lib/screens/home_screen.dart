@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'package:kralupy_streets/data/dummy_streets.dart';
 import 'package:kralupy_streets/screens/add_street.dart';
 import 'package:kralupy_streets/screens/game_screen.dart';
 import 'package:kralupy_streets/screens/streets_screen.dart';
@@ -35,7 +37,12 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 70),
                 ElevatedButton(
-                  onPressed: () => _switchScreen(context, const GameScreen()),
+                  onPressed: () => _switchScreen(
+                    context,
+                    const GameScreen(
+                      streets: dummyStreet,
+                    ),
+                  ),
                   style: ElevatedButton.styleFrom(
                       backgroundColor:
                           Theme.of(context).colorScheme.primaryContainer),

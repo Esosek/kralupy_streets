@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:kralupy_streets/data/dummy_streets.dart';
+import 'package:kralupy_streets/models/question.dart';
+
+import 'package:kralupy_streets/models/street.dart';
+import 'package:kralupy_streets/utils/quiz_generator.dart';
 import 'package:kralupy_streets/widgets/street_sign.dart';
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key});
+  const GameScreen({super.key, required this.streets});
+
+  final List<Street> streets;
 
   @override
   State<GameScreen> createState() => _GameScreenState();
 }
 
 class _GameScreenState extends State<GameScreen> {
+  late QuizGenerator quizGenerator;
+  late List<Question> questions;
+
   int _currentQuestion = 1;
   bool isAnswered = false;
   bool? isCorrect;
+
+  @override
+  void initState() {
+    super.initState();
+    quizGenerator = QuizGenerator(streets: widget.streets);
+    questions = quizGenerator.generateQuestions();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +40,7 @@ class _GameScreenState extends State<GameScreen> {
         ),
         floatingActionButton: isAnswered
             ? FloatingActionButton(
-                onPressed: () {},
+                onPressed: () => quizGenerator.generateQuestions(),
                 child: const Icon(
                   Icons.navigate_next_rounded,
                   size: 35,
@@ -38,8 +53,23 @@ class _GameScreenState extends State<GameScreen> {
             children: [
               Stack(
                 children: [
-                  Image.network(
-                      'https://firebasestorage.googleapis.com/v0/b/kralupy-streets.appspot.com/o/street_images%2Fnadrazni.jpg?alt=media&token=ca0e68e5-1531-44f4-a8fd-06aca30d159d&_gl=1*1aji2yr*_ga*ODgyMzc0OTUuMTY4NDkzNjkzNQ..*_ga_CW55HF8NVT*MTY5NjU5NTIxOS4zOS4xLjE2OTY1OTYyMDYuNTguMC4w'),
+                  Container(
+                    height: 250,
+                    width: double.infinity,
+                    color: Colors.grey.shade400,
+                    child: Image.network(
+                      widget.streets[0].imageUrl,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        }
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                   if (isAnswered && isCorrect != null)
                     Positioned(
                       right: 15,
@@ -65,9 +95,9 @@ class _GameScreenState extends State<GameScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    StreetSign(dummyStreet[0]),
-                    StreetSign(dummyStreet[1]),
-                    StreetSign(dummyStreet[2]),
+                    StreetSign(widget.streets[0]),
+                    StreetSign(widget.streets[1]),
+                    StreetSign(widget.streets[2]),
                   ],
                 ),
               ),
