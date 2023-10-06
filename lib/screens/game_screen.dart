@@ -8,12 +8,13 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
+  final int _currentQuestion = 1;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('1 z 5'),
+          title: Text('$_currentQuestion z 5'),
         ),
       ),
     );
