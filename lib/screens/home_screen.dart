@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:kralupy_streets/screens/add_street.dart';
+import 'package:kralupy_streets/screens/game_screen.dart';
+import 'package:kralupy_streets/screens/streets_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  void _switchScreen(BuildContext context, Widget screenWidget) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => screenWidget,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +35,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 70),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => _switchScreen(context, const GameScreen()),
                   style: ElevatedButton.styleFrom(
                       backgroundColor:
                           Theme.of(context).colorScheme.primaryContainer),
@@ -43,7 +54,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 18),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => _switchScreen(context, const StreetScreen()),
                   style: ElevatedButton.styleFrom(
                       backgroundColor:
                           Theme.of(context).colorScheme.secondaryContainer),
@@ -62,7 +73,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () => _switchScreen(context, const AddStreet()),
                   icon: const Icon(Icons.camera_alt),
                   label: Text(
                     'Přidat novou ulici',

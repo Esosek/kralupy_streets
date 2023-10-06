@@ -10,6 +10,12 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('1 z 5'),
+        ),
+      ),
+    );
   }
 }

@@ -10,6 +10,12 @@ class AddStreet extends StatefulWidget {
 class _AddStreetState extends State<AddStreet> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Přidat ulici'),
+        ),
+      ),
+    );
   }
 }
