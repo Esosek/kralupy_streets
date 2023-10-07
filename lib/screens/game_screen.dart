@@ -43,7 +43,8 @@ class _GameScreenState extends State<GameScreen> {
     if (_currentQuestionIndex == questions.length - 1) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const ResultsScreen(),
+          builder: (context) => ResultsScreen(
+              streets: widget.streets, questions: questions, answers: answers),
         ),
       );
       return;

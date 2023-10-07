@@ -3,17 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:kralupy_streets/models/street.dart';
 
 class StreetSign extends StatelessWidget {
-  const StreetSign(
-    this.street, {
-    super.key,
-  });
+  const StreetSign(this.street, {super.key, this.size = 160});
 
   final Street street;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 160,
+      width: size,
       child: Stack(
         alignment: Alignment.center,
         children: [
