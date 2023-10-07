@@ -87,7 +87,7 @@ class _GameScreenState extends State<GameScreen> {
               Stack(
                 children: [
                   Container(
-                    height: 250,
+                    height: 300,
                     width: double.infinity,
                     color: Colors.grey.shade400,
                     child: Image.network(
@@ -125,29 +125,33 @@ class _GameScreenState extends State<GameScreen> {
               ),
               const SizedBox(height: 8),
               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    for (Street option
-                        in questions[_currentQuestionIndex].options)
-                      GestureDetector(
-                        onTap: () => _submitAnswer(option.id),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 7,
-                                color: _isAnswered &&
-                                        option.id ==
-                                            questions[_currentQuestionIndex]
-                                                .correctAnswer
-                                                .id
-                                    ? Colors.green
-                                    : Colors.transparent),
+                child: FittedBox(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      for (Street option
+                          in questions[_currentQuestionIndex].options)
+                        GestureDetector(
+                          onTap: _isAnswered
+                              ? null
+                              : () => _submitAnswer(option.id),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 7,
+                                  color: _isAnswered &&
+                                          option.id ==
+                                              questions[_currentQuestionIndex]
+                                                  .correctAnswer
+                                                  .id
+                                      ? Colors.green
+                                      : Colors.transparent),
+                            ),
+                            child: StreetSign(option),
                           ),
-                          child: StreetSign(option),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
