@@ -10,7 +10,7 @@ const dummyStreet = [
     geolocation: Geolocation(latitude: 50.246103, longitude: 14.312623),
     descriptionParagraphs: [
       'Josef Holub byl český botanik a výzkumník rostlin. Měl značný vliv na rozvoj botanického výzkumu v České republice a byl autorem mnoha publikací věnovaných rostlinám a jejich ekologii. Jeho práce pomohla lépe pochopit biodiverzitu a rozšíření rostlinných druhů.',
-      'V této ulici bydlí vývojář této aplikace s jeho manželkou a dvěma syny',
+      'V této ulici bydlí vývojář této aplikace s jeho manželkou a dvěma syny.',
     ],
   ),
   Street(

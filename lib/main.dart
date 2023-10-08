@@ -6,7 +6,6 @@ import 'package:kralupy_streets/screens/home_screen.dart';
 final theme = ThemeData.light().copyWith(
     colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFC22011)),
     textTheme: GoogleFonts.barlowCondensedTextTheme().copyWith(
-      titleLarge: const TextStyle(fontWeight: FontWeight.bold),
       labelLarge: const TextStyle(fontSize: 17),
       labelMedium: const TextStyle(fontSize: 13),
     ));

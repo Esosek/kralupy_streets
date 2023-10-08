@@ -109,6 +109,7 @@ class _GameScreenState extends State<GameScreen> {
                     color: Colors.grey.shade400,
                     child: Image.network(
                       questions[_currentQuestionIndex].correctAnswer.imageUrl,
+                      fit: BoxFit.cover,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) {
                           return child;
@@ -117,7 +118,6 @@ class _GameScreenState extends State<GameScreen> {
                           child: CircularProgressIndicator(),
                         );
                       },
-                      fit: BoxFit.cover,
                     ),
                   ),
                   Positioned(
