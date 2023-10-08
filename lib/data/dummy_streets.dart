@@ -8,6 +8,10 @@ const dummyStreet = [
     imageUrl:
         'https://firebasestorage.googleapis.com/v0/b/kralupy-streets.appspot.com/o/street_images%2Fj_holuba.jpg?alt=media&token=3ea82fe7-687f-443c-a5a7-be8b75360e90&_gl=1*t45qw7*_ga*ODgyMzc0OTUuMTY4NDkzNjkzNQ..*_ga_CW55HF8NVT*MTY5NjYxNjE4Ni40MC4xLjE2OTY2MTY5MDUuNTguMC4w',
     geolocation: Geolocation(latitude: 50.246103, longitude: 14.312623),
+    descriptionParagraphs: [
+      'Josef Holub byl český botanik a výzkumník rostlin. Měl značný vliv na rozvoj botanického výzkumu v České republice a byl autorem mnoha publikací věnovaných rostlinám a jejich ekologii. Jeho práce pomohla lépe pochopit biodiverzitu a rozšíření rostlinných druhů.',
+      'V této ulici bydlí vývojář této aplikace s jeho manželkou a dvěma syny',
+    ],
   ),
   Street(
     id: 1,
@@ -57,5 +61,9 @@ const dummyStreet = [
     imageUrl:
         'https://firebasestorage.googleapis.com/v0/b/kralupy-streets.appspot.com/o/street_images%2Fj_seiferta.jpg?alt=media&token=6e6fde68-5835-4a23-b987-17105b74fff6&_gl=1*u4g9s6*_ga*ODgyMzc0OTUuMTY4NDkzNjkzNQ..*_ga_CW55HF8NVT*MTY5NjYxNjE4Ni40MC4xLjE2OTY2MTczMzQuNTEuMC4w',
     geolocation: Geolocation(latitude: 50.247764, longitude: 14.317231),
+    descriptionParagraphs: [
+      'Jaroslav Seifert byl významný český básník, který se narodil v Praze, ale prožil část svého života v Kralupech nad Vltavou. Toto město, ležící poblíž Prahy, mělo pro něj zvláštní význam, a to nejen jako místo jeho pobytu, ale také jako inspiraci pro jeho literární tvorbu.',
+      'Kralupy nad Vltavou jsou spojeny s Jaroslavem Seifertem především tím, že zde žil v letech 1935-1939, což byla doba, kdy napsal několik básní, které zachycovaly atmosféru tohoto města a jeho okolí. Jeho básně z této doby často reflektují krásu přírody a života na venkově.',
+    ],
   ),
 ];

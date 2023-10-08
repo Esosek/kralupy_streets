@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kralupy_streets/models/question.dart';
 import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/screens/game_screen.dart';
+import 'package:kralupy_streets/screens/street_detail_screen.dart';
 import 'package:kralupy_streets/widgets/street_sign.dart';
 
 class ResultsScreen extends StatelessWidget {
@@ -50,27 +51,35 @@ class ResultsScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          StreetSign(
-                            questions[index].correctAnswer,
-                            size: 130,
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => StreetDetailScreen(
+                                questions[index].correctAnswer),
                           ),
-                          SizedBox(
-                            width: 60,
-                            child: Text(
-                              answers[index] ? 'Správně' : 'Špatně',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(
-                                      color: answers[index]
-                                          ? Colors.green.shade700
-                                          : Colors.red.shade700),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            StreetSign(
+                              questions[index].correctAnswer,
+                              size: 130,
                             ),
-                          ),
-                        ],
+                            SizedBox(
+                              width: 60,
+                              child: Text(
+                                answers[index] ? 'Správně' : 'Špatně',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(
+                                        color: answers[index]
+                                            ? Colors.green.shade700
+                                            : Colors.red.shade700),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },

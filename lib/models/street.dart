@@ -6,10 +6,12 @@ class Street {
     required this.name,
     required this.imageUrl,
     required this.geolocation,
+    this.descriptionParagraphs,
   });
 
   final int id;
   final String name;
   final String imageUrl;
   final Geolocation geolocation;
+  final List<String>? descriptionParagraphs;
 }
