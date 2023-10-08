@@ -22,7 +22,7 @@ class _GameScreenState extends State<GameScreen> {
 
   int _currentQuestionIndex = 0;
   bool _isAnswered = false;
-  bool? _isCorrect;
+  bool _isCorrect = false;
   int? pickedAnswerIndex;
 
   @override
@@ -62,7 +62,7 @@ class _GameScreenState extends State<GameScreen> {
     setState(() {
       _currentQuestionIndex++;
       _isAnswered = false;
-      _isCorrect = null;
+      _isCorrect = false;
     });
   }
 
@@ -120,24 +120,29 @@ class _GameScreenState extends State<GameScreen> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  if (_isAnswered && _isCorrect != null)
-                    Positioned(
-                      right: 15,
-                      bottom: 15,
+                  Positioned(
+                    right: 15,
+                    bottom: 15,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeOut,
+                      width: _isAnswered ? 60 : 0,
+                      height: _isAnswered ? 60 : 0,
                       child: CircleAvatar(
                         radius: 35,
-                        backgroundColor: _isCorrect!
+                        backgroundColor: _isCorrect
                             ? Colors.green
                             : Theme.of(context).colorScheme.error,
                         child: Icon(
-                          size: 35,
-                          _isCorrect!
+                          size: _isAnswered ? 35 : 0,
+                          _isCorrect
                               ? Icons.check_rounded
                               : Icons.close_rounded,
                           color: Theme.of(context).colorScheme.onError,
                         ),
                       ),
                     ),
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
