@@ -23,9 +23,18 @@ class _GameScreenState extends State<GameScreen> {
   int _currentQuestionIndex = 0;
   bool _isAnswered = false;
   bool? _isCorrect;
+  int? pickedAnswerIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    quizGenerator = QuizGenerator(streets: widget.streets);
+    questions = quizGenerator.generateQuestions();
+  }
 
   void _submitAnswer(int streetId) {
     _isAnswered = true;
+    pickedAnswerIndex = streetId;
     if (streetId == questions[_currentQuestionIndex].correctAnswer.id) {
       answers.add(true);
       setState(() {
@@ -57,11 +66,19 @@ class _GameScreenState extends State<GameScreen> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    quizGenerator = QuizGenerator(streets: widget.streets);
-    questions = quizGenerator.generateQuestions();
+  Color highlightColor(int optionIndex) {
+    if (_isAnswered) {
+      if (optionIndex == questions[_currentQuestionIndex].correctAnswer.id) {
+        return Colors.green;
+      } else if (optionIndex == pickedAnswerIndex &&
+          pickedAnswerIndex !=
+              questions[_currentQuestionIndex].correctAnswer.id) {
+        return Theme.of(context).colorScheme.primaryContainer;
+      } else {
+        return Colors.transparent;
+      }
+    }
+    return Colors.transparent;
   }
 
   @override
@@ -136,16 +153,12 @@ class _GameScreenState extends State<GameScreen> {
                               ? null
                               : () => _submitAnswer(option.id),
                           child: Container(
+                            margin: const EdgeInsets.all(3),
                             decoration: BoxDecoration(
                               border: Border.all(
-                                  width: 7,
-                                  color: _isAnswered &&
-                                          option.id ==
-                                              questions[_currentQuestionIndex]
-                                                  .correctAnswer
-                                                  .id
-                                      ? Colors.green
-                                      : Colors.transparent),
+                                width: 7,
+                                color: highlightColor(option.id),
+                              ),
                             ),
                             child: StreetSign(option),
                           ),
