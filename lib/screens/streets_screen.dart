@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:kralupy_streets/models/street.dart';
+import 'package:kralupy_streets/screens/add_street.dart';
 import 'package:kralupy_streets/widgets/street_list_item.dart';
 
 class StreetScreen extends StatelessWidget {
@@ -20,6 +21,22 @@ class StreetScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Ulice'),
+          // actions: [
+          //   IconButton(
+          //     onPressed: () {},
+          //     icon: const Icon(Icons.filter_alt_rounded),
+          //   ),
+          // ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const AddStreet(),
+            ),
+          ),
+          child: const Icon(Icons.add),
         ),
         body: GridView.builder(
           padding: const EdgeInsets.all(8),
