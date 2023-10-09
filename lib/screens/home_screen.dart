@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
                   onPressed: () => _switchScreen(
                     context,
                     const GameScreen(
-                      streets: dummyStreet,
+                      streets: dummyStreets,
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -61,7 +61,11 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 18),
                 ElevatedButton(
-                  onPressed: () => _switchScreen(context, const StreetScreen()),
+                  onPressed: () => _switchScreen(
+                      context,
+                      StreetScreen(
+                        streets: dummyStreets,
+                      )),
                   style: ElevatedButton.styleFrom(
                       backgroundColor:
                           Theme.of(context).colorScheme.secondaryContainer),

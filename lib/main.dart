@@ -8,6 +8,7 @@ final theme = ThemeData.light().copyWith(
     textTheme: GoogleFonts.barlowCondensedTextTheme().copyWith(
       labelLarge: const TextStyle(fontSize: 17),
       labelMedium: const TextStyle(fontSize: 13),
+      labelSmall: const TextStyle(fontSize: 11),
     ));
 
 void main() {

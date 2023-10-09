@@ -1,7 +1,7 @@
 import 'package:kralupy_streets/models/geolocation.dart';
 import 'package:kralupy_streets/models/street.dart';
 
-const dummyStreet = [
+const dummyStreets = [
   Street(
     id: 0,
     name: 'J. Holuba',
