@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "623175512606",
+    "project_id": "kralupy-streets",
+    "storage_bucket": "kralupy-streets.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:623175512606:android:a3f89759961e77a8ccb40f",
+        "android_client_info": {
+          "package_name": "com.example.kralupy_streets"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAv9ISDpbKtJuZ0u97tebbopAXrj_O2hEw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
