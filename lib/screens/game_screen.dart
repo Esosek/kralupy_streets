@@ -106,7 +106,7 @@ class _GameScreenState extends State<GameScreen> {
                   Container(
                     height: 300,
                     width: double.infinity,
-                    color: Colors.grey.shade400,
+                    color: Colors.grey.shade300,
                     child: Image.network(
                       questions[_currentQuestionIndex].correctAnswer.imageUrl,
                       fit: BoxFit.cover,

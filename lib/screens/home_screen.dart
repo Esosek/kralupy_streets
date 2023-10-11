@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         child: Image.asset('assets/images/city_sign.png'),
                       ),
-                      const SizedBox(height: 70),
+                      const SizedBox(height: 60),
                       ElevatedButton(
                         onPressed: () => _switchScreen(
                           context,

@@ -22,7 +22,7 @@ class StreetDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              color: Colors.grey.shade400,
+              color: Colors.grey.shade300,
               height: 172,
               child: Image.network(
                 'https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=17&size=600x300&maptype=roadmap&markers=color:red%7C$lat,$lng&key=$googleApiKey',
