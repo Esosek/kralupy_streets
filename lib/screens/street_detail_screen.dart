@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kralupy_streets/models/street.dart';
 
-const googleApiKey = 'AIzaSyCYt6LlD-moKI2lkneM7E1FapstWheMx8U';
+import 'package:kralupy_streets/models/street.dart';
+import 'package:kralupy_streets/utils/api_keys.dart';
 
 class StreetDetailScreen extends StatelessWidget {
   const StreetDetailScreen(this.street, {super.key});
