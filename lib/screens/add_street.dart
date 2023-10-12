@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:kralupy_streets/models/geolocation.dart';
 import 'package:kralupy_streets/widgets/image_input.dart';
 import 'package:kralupy_streets/widgets/location_input.dart';
 
@@ -14,6 +15,14 @@ class _AddStreetState extends State<AddStreet> {
   final _streetNameController = TextEditingController();
   late FocusNode _streetNameFocusNode;
   bool _isEditingName = false;
+
+  Geolocation? _geolocation;
+
+  void _setLocation(
+      {required Geolocation geolocation, required String streetName}) {
+    _geolocation = geolocation;
+    _streetNameController.text = streetName;
+  }
 
   @override
   void initState() {
@@ -48,14 +57,19 @@ class _AddStreetState extends State<AddStreet> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              const ImageInput(),
+              const SizedBox(height: 12),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+                  const SizedBox(width: 40),
                   Expanded(
                     child: TextField(
                       focusNode: _streetNameFocusNode,
                       controller: _streetNameController,
                       enabled: _isEditingName,
+                      onEditingComplete: () =>
+                          setState(() => _isEditingName = false),
                       keyboardType: TextInputType.name,
                       enableSuggestions: false,
                       autocorrect: false,
@@ -85,9 +99,7 @@ class _AddStreetState extends State<AddStreet> {
                 ],
               ),
               const SizedBox(height: 12),
-              const ImageInput(),
-              const SizedBox(height: 12),
-              const LocationInput(),
+              LocationInput(onLocationSet: _setLocation),
             ],
           ),
         ),

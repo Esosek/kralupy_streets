@@ -10,6 +10,8 @@
 .svn/
 migrate_working_dir/
 api_keys.dart
+AndroidManifest.xml
+AppDelegate.swift
 
 # IntelliJ related
 *.iml
