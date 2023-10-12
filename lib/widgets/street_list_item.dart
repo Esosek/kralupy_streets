@@ -27,6 +27,8 @@ class StreetListItem extends StatelessWidget {
               child: Image.network(
                 street.imageUrl,
                 fit: BoxFit.fill,
+                height: 90,
+                width: double.infinity,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) {
                     return child;
