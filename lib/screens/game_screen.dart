@@ -101,49 +101,51 @@ class _GameScreenState extends State<GameScreen> {
           padding: const EdgeInsets.all(8),
           child: Column(
             children: [
-              Stack(
-                children: [
-                  Container(
-                    height: 300,
-                    width: double.infinity,
-                    color: Colors.grey.shade300,
-                    child: Image.network(
-                      questions[_currentQuestionIndex].correctAnswer.imageUrl,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        }
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
+              Expanded(
+                child: Stack(
+                  children: [
+                    Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      color: Colors.grey.shade300,
+                      child: Image.network(
+                        questions[_currentQuestionIndex].correctAnswer.imageUrl,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  Positioned(
-                    right: 15,
-                    bottom: 15,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeOut,
-                      width: _isAnswered ? 60 : 0,
-                      height: _isAnswered ? 60 : 0,
-                      child: CircleAvatar(
-                        radius: 35,
-                        backgroundColor: _isCorrect
-                            ? Colors.green
-                            : Theme.of(context).colorScheme.error,
-                        child: Icon(
-                          size: _isAnswered ? 35 : 0,
-                          _isCorrect
-                              ? Icons.check_rounded
-                              : Icons.close_rounded,
-                          color: Theme.of(context).colorScheme.onError,
+                    Positioned(
+                      right: 15,
+                      bottom: 15,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeOut,
+                        width: _isAnswered ? 60 : 0,
+                        height: _isAnswered ? 60 : 0,
+                        child: CircleAvatar(
+                          radius: 35,
+                          backgroundColor: _isCorrect
+                              ? Colors.green
+                              : Theme.of(context).colorScheme.error,
+                          child: Icon(
+                            size: _isAnswered ? 35 : 0,
+                            _isCorrect
+                                ? Icons.check_rounded
+                                : Icons.close_rounded,
+                            color: Theme.of(context).colorScheme.onError,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               const SizedBox(height: 8),
               Expanded(
