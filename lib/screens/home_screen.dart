@@ -7,7 +7,7 @@ import 'package:kralupy_streets/screens/add_street.dart';
 import 'package:kralupy_streets/screens/game_screen.dart';
 import 'package:kralupy_streets/screens/streets_screen.dart';
 
-final db = FirebaseFirestore.instance;
+final _db = FirebaseFirestore.instance;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Street> streets = [];
 
   void _loadStreets() async {
-    final streetsData = await db.collection('streets').get();
+    final streetsData = await _db.collection('streets').get();
     for (QueryDocumentSnapshot street in streetsData.docs) {
       final newStreet = Street(
         id: street['id'],
