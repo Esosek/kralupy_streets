@@ -35,6 +35,25 @@ class _AddStreetState extends State<AddStreet> {
 
   void _submitStreet() async {
     // Validate input
+    if (_streetImage == null ||
+        _geolocation == null ||
+        _streetNameController.text.length < 2) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Chybná data'),
+          content: const Text(
+              'Nahrajte prosím obrázek ulice, její lokaci a validní název.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
     setState(() {
       _isSending = true;
     });
@@ -53,7 +72,7 @@ class _AddStreetState extends State<AddStreet> {
       return;
     }
     Navigator.of(context).pop();
-    // Show snackbar
+
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
