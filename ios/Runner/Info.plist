@@ -4,6 +4,8 @@
 <dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Fill in current location when submitting new street.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Take a picture of a street that you want to add.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:kralupy_streets/models/geolocation.dart';
@@ -17,11 +19,18 @@ class _AddStreetState extends State<AddStreet> {
   bool _isEditingName = false;
 
   Geolocation? _geolocation;
+  File? _streetPicture;
 
   void _setLocation(
       {required Geolocation geolocation, required String streetName}) {
     _geolocation = geolocation;
     _streetNameController.text = streetName;
+  }
+
+  void _submitStreet() async {
+    // Send to Firebase
+    Navigator.of(context).pop();
+    // Show snackbar
   }
 
   @override
@@ -45,10 +54,7 @@ class _AddStreetState extends State<AddStreet> {
           title: const Text('Přidat ulici'),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-            // Show snackbar
-          },
+          onPressed: _submitStreet,
           child: const Icon(Icons.send_rounded),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -57,7 +63,10 @@ class _AddStreetState extends State<AddStreet> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const ImageInput(),
+              ImageInput(
+                onPickImage: (selectedPicture) =>
+                    _streetPicture = selectedPicture,
+              ),
               const SizedBox(height: 12),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
