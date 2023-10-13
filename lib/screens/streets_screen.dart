@@ -21,22 +21,20 @@ class StreetScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Ulice'),
-          // actions: [
-          //   IconButton(
-          //     onPressed: () {},
-          //     icon: const Icon(Icons.filter_alt_rounded),
-          //   ),
-          // ],
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const AddStreet(),
+          actions: [
+            IconButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const AddStreet(),
+                ),
+              ),
+              icon: const Icon(Icons.add),
             ),
-          ),
-          child: const Icon(Icons.add),
+            // IconButton(
+            //   onPressed: () {},
+            //   icon: const Icon(Icons.filter_alt_rounded),
+            // ),
+          ],
         ),
         body: GridView.builder(
           padding: const EdgeInsets.all(8),
