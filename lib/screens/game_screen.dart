@@ -28,7 +28,7 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void initState() {
     super.initState();
-    quizGenerator = QuizGenerator(streets: widget.streets);
+    quizGenerator = QuizGenerator(streets: widget.streets, questionsCount: 10);
     questions = quizGenerator.generateQuestions();
   }
 
@@ -84,97 +84,122 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('${_currentQuestionIndex + 1} z ${questions.length}'),
-        ),
-        floatingActionButton: _isAnswered
-            ? FloatingActionButton(
-                onPressed: _nextQuestion,
-                child: const Icon(
-                  Icons.navigate_next_rounded,
-                  size: 35,
-                ),
-              )
-            : null,
-        body: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              Expanded(
-                child: Stack(
-                  children: [
-                    Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      color: Colors.grey.shade300,
-                      child: Image.network(
-                        questions[_currentQuestionIndex].correctAnswer.imageUrl,
-                        fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) {
-                            return child;
-                          }
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                      ),
+      child: WillPopScope(
+        onWillPop: () async {
+          return await (showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Opravdu chcete kvíz ukončit?'),
+                  content:
+                      const Text('Všechny zodpovězené otázky budou ztraceny.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: const Text('Ne'),
                     ),
-                    Positioned(
-                      right: 15,
-                      bottom: 15,
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeOut,
-                        width: _isAnswered ? 60 : 0,
-                        height: _isAnswered ? 60 : 0,
-                        child: CircleAvatar(
-                          radius: 35,
-                          backgroundColor: _isCorrect
-                              ? Colors.green
-                              : Theme.of(context).colorScheme.error,
-                          child: Icon(
-                            size: _isAnswered ? 35 : 0,
-                            _isCorrect
-                                ? Icons.check_rounded
-                                : Icons.close_rounded,
-                            color: Theme.of(context).colorScheme.onError,
-                          ),
-                        ),
-                      ),
+                    ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: const Text('Ano'),
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 8),
-              Expanded(
-                child: FittedBox(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              )) ??
+              false;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('${_currentQuestionIndex + 1} z ${questions.length}'),
+          ),
+          floatingActionButton: _isAnswered
+              ? FloatingActionButton(
+                  onPressed: _nextQuestion,
+                  child: const Icon(
+                    Icons.navigate_next_rounded,
+                    size: 35,
+                  ),
+                )
+              : null,
+          body: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Stack(
                     children: [
-                      for (Street option
-                          in questions[_currentQuestionIndex].options)
-                        GestureDetector(
-                          onTap: _isAnswered
-                              ? null
-                              : () => _submitAnswer(option.id),
-                          child: Container(
-                            margin: const EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 7,
-                                color: highlightColor(option.id),
-                              ),
+                      Container(
+                        height: double.infinity,
+                        width: double.infinity,
+                        color: Colors.grey.shade300,
+                        child: Image.network(
+                          questions[_currentQuestionIndex]
+                              .correctAnswer
+                              .imageUrl,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          },
+                        ),
+                      ),
+                      Positioned(
+                        right: 15,
+                        bottom: 15,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeOut,
+                          width: _isAnswered ? 60 : 0,
+                          height: _isAnswered ? 60 : 0,
+                          child: CircleAvatar(
+                            radius: 35,
+                            backgroundColor: _isCorrect
+                                ? Colors.green
+                                : Theme.of(context).colorScheme.error,
+                            child: Icon(
+                              size: _isAnswered ? 35 : 0,
+                              _isCorrect
+                                  ? Icons.check_rounded
+                                  : Icons.close_rounded,
+                              color: Theme.of(context).colorScheme.onError,
                             ),
-                            child: StreetSign(option),
                           ),
                         ),
+                      ),
                     ],
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 8),
+                Expanded(
+                  child: FittedBox(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        for (Street option
+                            in questions[_currentQuestionIndex].options)
+                          GestureDetector(
+                            onTap: _isAnswered
+                                ? null
+                                : () => _submitAnswer(option.id),
+                            child: Container(
+                              margin: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 7,
+                                  color: highlightColor(option.id),
+                                ),
+                              ),
+                              child: StreetSign(option),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
