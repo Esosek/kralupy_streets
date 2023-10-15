@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'package:kralupy_streets/models/geolocation.dart';
 import 'package:kralupy_streets/models/street.dart';
@@ -8,6 +9,7 @@ import 'package:kralupy_streets/screens/game_screen.dart';
 import 'package:kralupy_streets/screens/streets_screen.dart';
 
 final _db = FirebaseFirestore.instance;
+final _analytics = FirebaseAnalytics.instance;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -40,6 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _isLoading = false;
     });
+
+    _analytics.logEvent(name: 'streets_loaded');
   }
 
   @override

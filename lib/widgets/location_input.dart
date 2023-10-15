@@ -28,19 +28,25 @@ class _LocationInputState extends State<LocationInput> {
     final url = Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$googleApiKey');
 
-    final response = await http.get(url);
-    final resData = json.decode(response.body);
+    try {
+      final response = await http.get(url);
+      final resData = json.decode(response.body);
 
-    final fetchedStreetName =
-        resData['results'][0]['address_components'][2]['long_name'];
+      final fetchedStreetName =
+          resData['results'][0]['address_components'][2]['long_name'];
 
-    setState(() {
-      _isLoading = false;
-    });
+      setState(() {
+        _isLoading = false;
+      });
 
-    widget.onLocationSet(
-        geolocation: Geolocation(latitude: lat!, longitude: lng!),
-        streetName: fetchedStreetName);
+      widget.onLocationSet(
+          geolocation: Geolocation(latitude: lat!, longitude: lng!),
+          streetName: fetchedStreetName);
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   void _getLocation() async {
@@ -73,7 +79,6 @@ class _LocationInputState extends State<LocationInput> {
       setState(() => _isLoading = false);
       return;
     }
-
     if (locationData.latitude == null || locationData.longitude == null) {
       return;
     }

@@ -43,6 +43,7 @@ class StreetScreen extends StatelessWidget {
             crossAxisCount: 3,
             mainAxisSpacing: 5,
             crossAxisSpacing: 5,
+            mainAxisExtent: 125,
           ),
           itemBuilder: (context, index) {
             return StreetListItem(
