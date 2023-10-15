@@ -13,6 +13,7 @@ dependencies:
   firebase_storage: ^11.2.8
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
   google_fonts: ^6.1.0
   google_maps_flutter: ^2.5.0
   http: ^1.1.0
@@ -29,3 +30,14 @@ flutter:
   uses-material-design: true
   assets:
     - 'assets/images/'
+
+flutter_launcher_icons:
+  image_path_android: "assets/images/app_icon_complete.png"
+  image_path_ios: "assets/images/app_icon_complete.png"
+  android: true
+  ios: true
+  adaptive_icon_background: "#c41b0e"
+  adaptive_icon_foreground: "assets/images/app_icon_foreground.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true
+  background_color_ios: "#c41b0e"
