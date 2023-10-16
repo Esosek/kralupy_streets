@@ -106,6 +106,8 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     return SafeArea(
       child: WillPopScope(
         onWillPop: () async {
@@ -144,7 +146,8 @@ class _GameScreenState extends State<GameScreen> {
               : null,
           body: Padding(
             padding: const EdgeInsets.all(8),
-            child: Column(
+            child: Flex(
+              direction: isLandscape ? Axis.horizontal : Axis.vertical,
               children: [
                 Expanded(
                   child: Stack(

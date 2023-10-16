@@ -4,8 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'package:kralupy_streets/models/geolocation.dart';
 import 'package:kralupy_streets/models/street.dart';
-import 'package:kralupy_streets/widgets/home_screen/home_buttons.dart';
-import 'package:kralupy_streets/widgets/home_screen/home_image.dart';
+import 'package:kralupy_streets/widgets/home_buttons.dart';
 
 final db = FirebaseFirestore.instance;
 final analytics = FirebaseAnalytics.instance;
@@ -75,24 +74,30 @@ class _HomeScreenState extends State<HomeScreen> {
             : Padding(
                 padding: const EdgeInsets.all(16),
                 child: Center(
-                  child: isLandscape
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const HomeImage(),
-                            const SizedBox(width: 160),
-                            HomeButtons(streets: streets)
-                          ],
-                        )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const HomeImage(),
-                            const SizedBox(height: 60),
-                            HomeButtons(streets: streets),
-                          ],
+                  child: Flex(
+                    direction: isLandscape ? Axis.horizontal : Axis.vertical,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: isLandscape
+                            ? MediaQuery.of(context).size.width * 0.25
+                            : MediaQuery.of(context).size.width * 0.8,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(width: 1),
                         ),
+                        child: Image.asset(
+                          'assets/images/city_sign.png',
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 60,
+                        height: 60,
+                      ),
+                      HomeButtons(streets: streets)
+                    ],
+                  ),
                 ),
               ),
       ),

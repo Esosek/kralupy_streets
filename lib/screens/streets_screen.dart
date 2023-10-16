@@ -11,6 +11,9 @@ class StreetScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     final sortedStreets = List.of(streets);
     sortedStreets.sort(
       (a, b) => a.name.toLowerCase().compareTo(
@@ -39,8 +42,8 @@ class StreetScreen extends StatelessWidget {
         body: GridView.builder(
           padding: const EdgeInsets.all(8),
           itemCount: streets.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: isLandscape ? 5 : 3,
             mainAxisSpacing: 5,
             crossAxisSpacing: 5,
             mainAxisExtent: 125,
