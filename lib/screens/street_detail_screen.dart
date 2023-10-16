@@ -1,15 +1,28 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 
 import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/utils/api_keys.dart';
+
+final analytics = FirebaseAnalytics.instance;
 
 class StreetDetailScreen extends StatelessWidget {
   const StreetDetailScreen(this.street, {super.key});
 
   final Street street;
 
+  void _logVisit() {
+    analytics.logEvent(
+      name: 'street_detail_visit',
+      parameters: {
+        'street_name': street.name,
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    _logVisit();
     final lat = street.geolocation.latitude;
     final lng = street.geolocation.longitude;
     return Scaffold(

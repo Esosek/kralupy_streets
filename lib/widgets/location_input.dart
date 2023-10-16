@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:kralupy_streets/screens/map_screen.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:kralupy_streets/screens/map_screen.dart';
 import 'package:kralupy_streets/models/geolocation.dart';
 import 'package:kralupy_streets/utils/api_keys.dart';
 

@@ -1,10 +1,13 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:kralupy_streets/models/question.dart';
 
+import 'package:kralupy_streets/models/question.dart';
 import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/screens/results_screen.dart';
 import 'package:kralupy_streets/utils/quiz_generator.dart';
 import 'package:kralupy_streets/widgets/street_sign.dart';
+
+final analytics = FirebaseAnalytics.instance;
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key, required this.streets});
@@ -32,10 +35,11 @@ class _GameScreenState extends State<GameScreen> {
     questions = quizGenerator.generateQuestions();
   }
 
-  void _submitAnswer(int streetId) {
+  void _submitAnswer(Street pickedStreet) {
     _isAnswered = true;
-    pickedAnswerIndex = streetId;
-    if (streetId == questions[_currentQuestionIndex].correctAnswer.id) {
+    pickedAnswerIndex = pickedStreet.id;
+    final correctAnswer = questions[_currentQuestionIndex].correctAnswer;
+    if (pickedAnswerIndex == correctAnswer.id) {
       answers.add(true);
       setState(() {
         _isCorrect = true;
@@ -46,17 +50,36 @@ class _GameScreenState extends State<GameScreen> {
         _isCorrect = false;
       });
     }
+    analytics.logEvent(
+      name: 'street_answered',
+      parameters: {
+        'correct_street_name': correctAnswer.name,
+        'chosen_street_name': pickedStreet.name,
+        'value': (pickedAnswerIndex == correctAnswer.id).toString(),
+      },
+    );
   }
 
-  void _nextQuestion() {
+  void _nextQuestion() async {
     if (_currentQuestionIndex == questions.length - 1) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => ResultsScreen(
-              streets: widget.streets, questions: questions, answers: answers),
-        ),
+      int correctAnswerCount = answers.where((answer) => answer == true).length;
+      await analytics.logEvent(
+        name: 'quiz_completed',
+        parameters: {
+          'correct_answer_count': correctAnswerCount,
+        },
       );
-      return;
+      if (context.mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => ResultsScreen(
+                streets: widget.streets,
+                questions: questions,
+                answers: answers),
+          ),
+        );
+        return;
+      }
     }
 
     setState(() {
@@ -182,7 +205,7 @@ class _GameScreenState extends State<GameScreen> {
                           GestureDetector(
                             onTap: _isAnswered
                                 ? null
-                                : () => _submitAnswer(option.id),
+                                : () => _submitAnswer(option),
                             child: Container(
                               margin: const EdgeInsets.all(3),
                               decoration: BoxDecoration(

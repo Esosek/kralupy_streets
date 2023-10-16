@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -8,7 +9,8 @@ import 'package:kralupy_streets/models/geolocation.dart';
 import 'package:kralupy_streets/widgets/image_input.dart';
 import 'package:kralupy_streets/widgets/location_input.dart';
 
-final _db = FirebaseFirestore.instance;
+final db = FirebaseFirestore.instance;
+final analytics = FirebaseAnalytics.instance;
 
 class AddStreet extends StatefulWidget {
   const AddStreet({super.key});
@@ -22,6 +24,7 @@ class _AddStreetState extends State<AddStreet> {
   late FocusNode _streetNameFocusNode;
   bool _isEditingName = false;
   bool _isSending = false;
+  String? _fetchedStreetName;
 
   Geolocation? _geolocation;
   File? _streetImage;
@@ -31,6 +34,14 @@ class _AddStreetState extends State<AddStreet> {
       {required Geolocation geolocation, required String streetName}) {
     _geolocation = geolocation;
     _streetNameController.text = streetName;
+    _fetchedStreetName = streetName;
+
+    analytics.logEvent(
+      name: 'new_street_location_stored',
+      parameters: {
+        'name': _fetchedStreetName,
+      },
+    );
   }
 
   void _submitStreet() async {
@@ -58,7 +69,7 @@ class _AddStreetState extends State<AddStreet> {
       _isSending = true;
     });
     await _uploadImage();
-    await _db.collection('suggestions').add(
+    await db.collection('suggestions').add(
       {
         'name': _streetNameController.text,
         'geolocation': {
@@ -79,6 +90,12 @@ class _AddStreetState extends State<AddStreet> {
         content: Text(
             'Požadavek na přidání ulice "${_streetNameController.text}" byl odeslán. Děkujeme!'),
       ),
+    );
+    analytics.logEvent(
+      name: 'new_street_submitted',
+      parameters: {
+        'street_name': _streetNameController.text,
+      },
     );
   }
 
@@ -140,8 +157,16 @@ class _AddStreetState extends State<AddStreet> {
                       focusNode: _streetNameFocusNode,
                       controller: _streetNameController,
                       enabled: _isEditingName,
-                      onEditingComplete: () =>
-                          setState(() => _isEditingName = false),
+                      onEditingComplete: () {
+                        analytics.logEvent(
+                          name: 'new_street_name_changed',
+                          parameters: {
+                            'old_name': _fetchedStreetName ?? 'null',
+                            'new_name': _streetNameController.text,
+                          },
+                        );
+                        setState(() => _isEditingName = false);
+                      },
                       keyboardType: TextInputType.name,
                       enableSuggestions: false,
                       autocorrect: false,
