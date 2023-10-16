@@ -4,9 +4,8 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'package:kralupy_streets/models/geolocation.dart';
 import 'package:kralupy_streets/models/street.dart';
-import 'package:kralupy_streets/screens/add_street.dart';
-import 'package:kralupy_streets/screens/game_screen.dart';
-import 'package:kralupy_streets/screens/streets_screen.dart';
+import 'package:kralupy_streets/widgets/home_screen/home_buttons.dart';
+import 'package:kralupy_streets/widgets/home_screen/home_image.dart';
 
 final db = FirebaseFirestore.instance;
 final analytics = FirebaseAnalytics.instance;
@@ -52,118 +51,48 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  void _switchScreen(BuildContext context, Widget screenWidget) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => screenWidget,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         body: _isLoading
             ? Center(
                 child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Fetching streets data...',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const SizedBox(height: 24),
-                      const CircularProgressIndicator(),
-                    ]),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Fetching streets data...',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 24),
+                    const CircularProgressIndicator(),
+                  ],
+                ),
               )
             : Padding(
                 padding: const EdgeInsets.all(16),
                 child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(width: 1),
+                  child: isLandscape
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const HomeImage(),
+                            const SizedBox(width: 160),
+                            HomeButtons(streets: streets)
+                          ],
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const HomeImage(),
+                            const SizedBox(height: 60),
+                            HomeButtons(streets: streets),
+                          ],
                         ),
-                        child: Image.asset('assets/images/city_sign.png'),
-                      ),
-                      const SizedBox(height: 60),
-                      ElevatedButton(
-                        onPressed: () => _switchScreen(
-                          context,
-                          GameScreen(
-                            streets: streets,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primaryContainer),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 8),
-                          child: Text(
-                            'Nová hra',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge!
-                                .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimaryContainer,
-                                ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 18),
-                      ElevatedButton(
-                        onPressed: () => _switchScreen(
-                          context,
-                          StreetScreen(
-                            streets: streets,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context)
-                                .colorScheme
-                                .secondaryContainer),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 8),
-                          child: Text(
-                            'Ulice',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge!
-                                .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSecondaryContainer,
-                                ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      TextButton.icon(
-                        onPressed: () =>
-                            _switchScreen(context, const AddStreet()),
-                        icon: const Icon(Icons.camera_alt),
-                        label: Text(
-                          'Přidat novou ulici',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
               ),
       ),
