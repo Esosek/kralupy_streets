@@ -119,7 +119,7 @@ class ResultsScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  totalScoreWidget,
+                  if (isLandscape) totalScoreWidget,
                   FloatingActionButton(
                     onPressed: () {
                       Navigator.of(context).pushReplacement(

@@ -28,22 +28,20 @@ class StreetDetailScreen extends StatelessWidget {
     final lat = street.geolocation.latitude;
     final lng = street.geolocation.longitude;
 
-    Widget mapPreview = Expanded(
-      child: Container(
-        color: const Color.fromRGBO(224, 224, 224, 1),
-        width: double.infinity,
-        child: Image.network(
-          'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=17&size=600x300&maptype=roadmap&markers=color:red%7C$lat,$lng&key=$googleApiKey',
-          fit: BoxFit.fitWidth,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) {
-              return child;
-            }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
-        ),
+    Widget mapPreview = Container(
+      color: const Color.fromRGBO(224, 224, 224, 1),
+      width: double.infinity,
+      child: Image.network(
+        'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=17&size=600x300&maptype=roadmap&markers=color:red%7C$lat,$lng&key=$googleApiKey',
+        fit: BoxFit.fitWidth,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
 
@@ -86,7 +84,7 @@ class StreetDetailScreen extends StatelessWidget {
                 child: Image.network(street.imageUrl),
               ),
               const SizedBox(width: 20),
-              mapPreview,
+              Expanded(child: mapPreview),
             ],
           ),
         ],
