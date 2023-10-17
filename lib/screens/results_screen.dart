@@ -23,6 +23,20 @@ class ResultsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    Widget totalScoreWidget = CircleAvatar(
+      backgroundColor: Colors.green.shade700,
+      radius: 30,
+      child: Text(
+        '$correctAnswersCount',
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+              fontSize: 30,
+              color: Colors.white,
+            ),
+      ),
+    );
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -32,19 +46,14 @@ class ResultsScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 12),
           child: Column(
             children: [
-              CircleAvatar(
-                backgroundColor: Colors.green.shade700,
-                radius: 30,
-                child: Text(
-                  '$correctAnswersCount',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        fontSize: 30,
-                        color: Colors.white,
-                      ),
+              if (!isLandscape)
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    totalScoreWidget,
+                    const SizedBox(height: 32),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 32),
               Expanded(
                 child: ListView.builder(
                   itemCount: questions.length,
@@ -87,7 +96,7 @@ class ResultsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   OutlinedButton(
                     onPressed: () {
@@ -110,6 +119,7 @@ class ResultsScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+                  totalScoreWidget,
                   FloatingActionButton(
                     onPressed: () {
                       Navigator.of(context).pushReplacement(
