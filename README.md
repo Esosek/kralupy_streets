@@ -13,7 +13,7 @@ Aside from the quiz game, users can explore additional information about these s
 ## Getting Started
 To get started with Ulicze, follow these steps:
 
-1. **Download the App:** Visit the [App Store](#) or [Google Play Store](#) to download the Ulicze app to your mobile device.
+1. **Download the App:** Visit the [Google Play Store](#) to download the Ulicze app to your mobile device.
 
 2. **Explore Streets:** Start by exploring the streets of Kralupy nad Vltavou and familiarize yourself with their images and information.
 
