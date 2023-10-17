@@ -55,7 +55,7 @@ class _GameScreenState extends State<GameScreen> {
       parameters: {
         'correct_street_name': correctAnswer.name,
         'chosen_street_name': pickedStreet.name,
-        'value': (pickedAnswerIndex == correctAnswer.id).toString(),
+        'value': pickedAnswerIndex == correctAnswer.id ? 1 : 0,
       },
     );
   }
