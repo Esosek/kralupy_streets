@@ -13,6 +13,7 @@ api_keys.dart
 AndroidManifest.xml
 AppDelegate.swift
 key.properties
+firebase_options.dart
 
 # IntelliJ related
 *.iml
