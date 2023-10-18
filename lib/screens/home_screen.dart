@@ -21,27 +21,31 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Street> streets = [];
 
   void _loadStreets() async {
-    final streetsData = await db.collection('streets').get();
-    for (QueryDocumentSnapshot street in streetsData.docs) {
-      final newStreet = Street(
-        id: street['id'],
-        name: street['name'],
-        imageUrl: street['imageUrl'],
-        descriptionParagraphs: street['descriptionParagraphs'] == null
-            ? []
-            : List<String>.from(street['descriptionParagraphs']),
-        geolocation: Geolocation(
-          latitude: street['geolocation']['lat'],
-          longitude: street['geolocation']['lng'],
-        ),
-      );
-      streets.add(newStreet);
+    try {
+      final streetsData = await db.collection('streets').get();
+      for (QueryDocumentSnapshot street in streetsData.docs) {
+        final newStreet = Street(
+          id: street['id'],
+          name: street['name'],
+          imageUrl: street['imageUrl'],
+          descriptionParagraphs: street['descriptionParagraphs'] == null
+              ? []
+              : List<String>.from(street['descriptionParagraphs']),
+          geolocation: Geolocation(
+            latitude: street['geolocation']['lat'],
+            longitude: street['geolocation']['lng'],
+          ),
+        );
+        streets.add(newStreet);
+        analytics.logEvent(name: 'streets_loaded');
+      }
+    } catch (e) {
+      analytics.logEvent(name: 'streets_fetch_failed');
     }
+
     setState(() {
       _isLoading = false;
     });
-
-    analytics.logEvent(name: 'streets_loaded');
   }
 
   @override
