@@ -23,7 +23,7 @@ class StreetScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Ulice'),
+          title: Text('Ulice (${streets.length})'),
           actions: [
             IconButton(
               onPressed: () => Navigator.of(context).push(
