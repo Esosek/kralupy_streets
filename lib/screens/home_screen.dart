@@ -24,24 +24,30 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final streetsData = await db.collection('streets').get();
       for (QueryDocumentSnapshot street in streetsData.docs) {
-        final newStreet = Street(
-          id: street['id'],
-          name: street['name'],
-          imageUrl: street['imageUrl'],
-          descriptionParagraphs: street['descriptionParagraphs'] == null
-              ? []
-              : List<String>.from(street['descriptionParagraphs']),
-          geolocation: Geolocation(
-            latitude: street['geolocation']['lat'],
-            longitude: street['geolocation']['lng'],
-          ),
-        );
-        streets.add(newStreet);
-        analytics.logEvent(name: 'streets_loaded');
+        // Handles database errors
+        try {
+          final newStreet = Street(
+            id: street['id'],
+            name: street['name'],
+            imageUrl: street['imageUrl'],
+            descriptionParagraphs: street['descriptionParagraphs'] == null
+                ? []
+                : List<String>.from(street['descriptionParagraphs']),
+            geolocation: Geolocation(
+              latitude: street['geolocation']['lat'],
+              longitude: street['geolocation']['lng'],
+            ),
+          );
+          streets.add(newStreet);
+        } catch (e) {
+          analytics.logEvent(
+              name: '${street['id']}_data_transformation_failed');
+        }
       }
     } catch (e) {
       analytics.logEvent(name: 'streets_fetch_failed');
     }
+    analytics.logEvent(name: 'streets_loaded');
 
     setState(() {
       _isLoading = false;
@@ -50,8 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    _loadStreets();
     super.initState();
+    _loadStreets();
   }
 
   @override
