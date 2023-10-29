@@ -5,6 +5,7 @@ import 'package:kralupy_streets/models/question.dart';
 import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/screens/results_screen.dart';
 import 'package:kralupy_streets/utils/quiz_generator.dart';
+import 'package:kralupy_streets/widgets/street_image.dart';
 import 'package:kralupy_streets/widgets/street_sign.dart';
 
 final analytics = FirebaseAnalytics.instance;
@@ -156,19 +157,8 @@ class _GameScreenState extends State<GameScreen> {
                         height: double.infinity,
                         width: double.infinity,
                         color: Colors.grey.shade300,
-                        child: Image.network(
-                          questions[_currentQuestionIndex]
-                              .correctAnswer
-                              .imageUrl,
-                          fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) {
-                              return child;
-                            }
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          },
+                        child: StreetImage(
+                          questions[_currentQuestionIndex].correctAnswer,
                         ),
                       ),
                       Positioned(

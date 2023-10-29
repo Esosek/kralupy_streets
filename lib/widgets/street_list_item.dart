@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/screens/street_detail_screen.dart';
+import 'package:kralupy_streets/widgets/street_image.dart';
 
-class StreetListItem extends StatelessWidget {
+class StreetListItem extends ConsumerWidget {
   const StreetListItem(this.street, {super.key});
 
   final Street street;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
@@ -25,20 +27,7 @@ class StreetListItem extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(5.0),
-                child: Image.network(
-                  street.imageUrl,
-                  fit: BoxFit.fill,
-                  height: 90,
-                  width: double.infinity,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child;
-                    }
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
-                ),
+                child: StreetImage(street, height: 90),
               ),
               Positioned(
                 bottom: 5,

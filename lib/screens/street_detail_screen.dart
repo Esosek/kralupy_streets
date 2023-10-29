@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/utils/api_keys.dart';
+import 'package:kralupy_streets/widgets/street_image.dart';
 
 final analytics = FirebaseAnalytics.instance;
 
@@ -59,7 +60,7 @@ class StreetDetailScreen extends StatelessWidget {
               ),
             ),
         const SizedBox(height: 16),
-        Image.network(street.imageUrl),
+        StreetImage(street),
       ],
     );
 
@@ -81,7 +82,7 @@ class StreetDetailScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Image.network(street.imageUrl),
+                child: StreetImage(street),
               ),
               const SizedBox(width: 20),
               Expanded(child: mapPreview),
