@@ -32,8 +32,9 @@ class _LocationInputState extends State<LocationInput> {
       final response = await http.get(url);
       final resData = json.decode(response.body);
 
-      final fetchedStreetName =
-          resData['results'][0]['address_components'][2]['long_name'];
+      final String fullAddress =
+          resData['results'][0]['formatted_address'] ?? '';
+      final fetchedStreetName = fullAddress.split(' ')[0];
 
       setState(() {
         _isLoading = false;
