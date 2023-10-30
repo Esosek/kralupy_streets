@@ -1,67 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kralupy_streets/models/geolocation.dart';
 import 'package:kralupy_streets/models/street.dart';
+import 'package:kralupy_streets/providers/street_provider.dart';
 import 'package:kralupy_streets/widgets/home_buttons.dart';
 
 final db = FirebaseFirestore.instance;
 final analytics = FirebaseAnalytics.instance;
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _isLoading = true;
-  final List<Street> streets = [];
-
-  void _loadStreets() async {
-    try {
-      final streetsData = await db.collection('streets').get();
-      for (QueryDocumentSnapshot street in streetsData.docs) {
-        // Handles database errors
-        try {
-          final newStreet = Street(
-            id: street['id'],
-            name: street['name'],
-            imageUrl: street['imageUrl'],
-            descriptionParagraphs: street['descriptionParagraphs'] == null
-                ? []
-                : List<String>.from(street['descriptionParagraphs']),
-            geolocation: Geolocation(
-              latitude: street['geolocation']['lat'],
-              longitude: street['geolocation']['lng'],
-            ),
-          );
-          streets.add(newStreet);
-        } catch (e) {
-          analytics.logEvent(
-              name: '${street['id']}_data_transformation_failed');
-        }
-      }
-    } catch (e) {
-      analytics.logEvent(name: 'streets_fetch_failed');
-    }
-    analytics.logEvent(name: 'streets_loaded');
-
-    setState(() {
-      _isLoading = false;
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    _loadStreets();
+    ref.read(streetProvider.notifier).loadStreets();
   }
 
   @override
   Widget build(BuildContext context) {
+    final streets = ref.watch(streetProvider);
+    if (streets.isNotEmpty) {
+      _isLoading = false;
+    }
     bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     return SafeArea(
@@ -105,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: 60,
                         height: 60,
                       ),
-                      HomeButtons(streets: streets)
+                      const HomeButtons(),
                     ],
                   ),
                 ),

@@ -6,9 +6,7 @@ import 'package:kralupy_streets/screens/game_screen.dart';
 import 'package:kralupy_streets/screens/streets_screen.dart';
 
 class HomeButtons extends StatelessWidget {
-  const HomeButtons({super.key, required this.streets});
-
-  final List<Street> streets;
+  const HomeButtons({super.key});
 
   void _switchScreen(BuildContext context, Widget screenWidget) {
     Navigator.of(context).push(
@@ -26,9 +24,7 @@ class HomeButtons extends StatelessWidget {
         ElevatedButton(
           onPressed: () => _switchScreen(
             context,
-            GameScreen(
-              streets: streets,
-            ),
+            const GameScreen(),
           ),
           style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.primaryContainer),
@@ -46,9 +42,7 @@ class HomeButtons extends StatelessWidget {
         ElevatedButton(
           onPressed: () => _switchScreen(
             context,
-            StreetScreen(
-              streets: streets,
-            ),
+            const StreetScreen(),
           ),
           style: ElevatedButton.styleFrom(
               backgroundColor:

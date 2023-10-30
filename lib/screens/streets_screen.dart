@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kralupy_streets/models/street.dart';
+import 'package:kralupy_streets/providers/street_provider.dart';
 import 'package:kralupy_streets/screens/add_street.dart';
 import 'package:kralupy_streets/widgets/street_list_item.dart';
 
-class StreetScreen extends StatelessWidget {
-  const StreetScreen({super.key, required this.streets});
-
-  final List<Street> streets;
+class StreetScreen extends ConsumerWidget {
+  const StreetScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final streets = ref.watch(streetProvider);
     bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
 

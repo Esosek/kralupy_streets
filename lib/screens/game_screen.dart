@@ -1,8 +1,10 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kralupy_streets/models/question.dart';
 import 'package:kralupy_streets/models/street.dart';
+import 'package:kralupy_streets/providers/street_provider.dart';
 import 'package:kralupy_streets/screens/results_screen.dart';
 import 'package:kralupy_streets/utils/quiz_generator.dart';
 import 'package:kralupy_streets/widgets/street_image.dart';
@@ -10,16 +12,15 @@ import 'package:kralupy_streets/widgets/street_sign.dart';
 
 final analytics = FirebaseAnalytics.instance;
 
-class GameScreen extends StatefulWidget {
-  const GameScreen({super.key, required this.streets});
-
-  final List<Street> streets;
+class GameScreen extends ConsumerStatefulWidget {
+  const GameScreen({super.key});
 
   @override
-  State<GameScreen> createState() => _GameScreenState();
+  ConsumerState<GameScreen> createState() => _GameScreenState();
 }
 
-class _GameScreenState extends State<GameScreen> {
+class _GameScreenState extends ConsumerState<GameScreen> {
+  late List<Street> streets;
   late QuizGenerator quizGenerator;
   late List<Question> questions;
   final List<bool> answers = [];
@@ -32,7 +33,8 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void initState() {
     super.initState();
-    quizGenerator = QuizGenerator(streets: widget.streets, questionsCount: 10);
+    streets = ref.read(streetProvider);
+    quizGenerator = QuizGenerator(streets: streets, questionsCount: 10);
     questions = quizGenerator.generateQuestions();
   }
 
@@ -73,10 +75,8 @@ class _GameScreenState extends State<GameScreen> {
       if (context.mounted) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => ResultsScreen(
-                streets: widget.streets,
-                questions: questions,
-                answers: answers),
+            builder: (context) =>
+                ResultsScreen(questions: questions, answers: answers),
           ),
         );
         return;

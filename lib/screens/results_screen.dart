@@ -7,13 +7,12 @@ import 'package:kralupy_streets/screens/street_detail_screen.dart';
 import 'package:kralupy_streets/widgets/street_sign.dart';
 
 class ResultsScreen extends StatelessWidget {
-  const ResultsScreen(
-      {super.key,
-      required this.streets,
-      required this.questions,
-      required this.answers});
+  const ResultsScreen({
+    super.key,
+    required this.questions,
+    required this.answers,
+  });
 
-  final List<Street> streets;
   final List<Question> questions;
   final List<bool> answers;
 
@@ -124,7 +123,7 @@ class ResultsScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                          builder: (context) => GameScreen(streets: streets),
+                          builder: (context) => const GameScreen(),
                         ),
                       );
                     },
