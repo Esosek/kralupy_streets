@@ -7,10 +7,12 @@ import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/providers/image_provider.dart';
 
 class StreetImage extends ConsumerWidget {
-  const StreetImage(this.street, {this.height, super.key});
+  const StreetImage(this.street,
+      {this.height, this.condensed = false, super.key});
 
   final Street street;
   final double? height;
+  final bool condensed;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,11 +22,28 @@ class StreetImage extends ConsumerWidget {
       height: 90,
       width: double.infinity,
       child: Center(
-        child: Text(
-          'Nahrávání obrázku selhalo',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
+        child: condensed
+            ? const Center(
+                child: Icon(
+                  Icons.error_outline_rounded,
+                  color: Colors.grey,
+                ),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.wifi_off_rounded,
+                    color: Colors.grey,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Nahrávání obrázku selhalo. Zkontrolujte prosím své připojení.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
       ),
     );
     return FutureBuilder(

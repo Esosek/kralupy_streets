@@ -27,7 +27,11 @@ class StreetListItem extends ConsumerWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(5.0),
-                child: StreetImage(street, height: 90),
+                child: StreetImage(
+                  street,
+                  height: 90,
+                  condensed: true,
+                ),
               ),
               Positioned(
                 bottom: 5,
