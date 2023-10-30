@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/providers/street_provider.dart';
 import 'package:kralupy_streets/screens/add_street.dart';
 import 'package:kralupy_streets/widgets/street_list_item.dart';

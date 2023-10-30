@@ -3,8 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:kralupy_streets/models/geolocation.dart';
-import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/providers/street_provider.dart';
 import 'package:kralupy_streets/widgets/home_buttons.dart';
 

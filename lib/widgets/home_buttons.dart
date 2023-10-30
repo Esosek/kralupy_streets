@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/screens/add_street.dart';
 import 'package:kralupy_streets/screens/game_screen.dart';
 import 'package:kralupy_streets/screens/streets_screen.dart';
