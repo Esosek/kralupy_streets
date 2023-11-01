@@ -8,6 +8,7 @@ import 'package:kralupy_streets/widgets/home_buttons.dart';
 
 final db = FirebaseFirestore.instance;
 final analytics = FirebaseAnalytics.instance;
+const appVersion = '1.0.2';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -53,28 +54,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             : Padding(
                 padding: const EdgeInsets.all(16),
                 child: Center(
-                  child: Flex(
-                    direction: isLandscape ? Axis.horizontal : Axis.vertical,
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        width: isLandscape
-                            ? MediaQuery.of(context).size.width * 0.25
-                            : MediaQuery.of(context).size.width * 0.8,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(width: 1),
-                        ),
-                        child: Image.asset(
-                          'assets/images/city_sign.png',
+                      Expanded(
+                        child: Flex(
+                          direction:
+                              isLandscape ? Axis.horizontal : Axis.vertical,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: isLandscape
+                                  ? MediaQuery.of(context).size.width * 0.25
+                                  : MediaQuery.of(context).size.width * 0.8,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(width: 1),
+                              ),
+                              child: Image.asset(
+                                'assets/images/city_sign.png',
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 60,
+                              height: 60,
+                            ),
+                            const HomeButtons(),
+                          ],
                         ),
                       ),
-                      const SizedBox(
-                        width: 60,
-                        height: 60,
+                      Text(
+                        'v$appVersion',
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
-                      const HomeButtons(),
                     ],
                   ),
                 ),
