@@ -50,7 +50,7 @@ class _LocationInputState extends State<LocationInput> {
     }
   }
 
-  void _getLocation() async {
+  void _getLocation(BuildContext context) async {
     Location location = Location();
 
     bool serviceEnabled;
@@ -77,19 +77,23 @@ class _LocationInputState extends State<LocationInput> {
       locationData = await location.getLocation();
     } catch (e) {
       // Handle errors
-      setState(() => _isLoading = false);
+      if (context.mounted) {
+        setState(() => _isLoading = false);
+      }
       return;
     }
     if (locationData.latitude == null || locationData.longitude == null) {
       return;
     }
 
-    setState(() {
-      lat = locationData.latitude!;
-      lng = locationData.longitude!;
-    });
+    if (context.mounted) {
+      setState(() {
+        lat = locationData.latitude!;
+        lng = locationData.longitude!;
+      });
 
-    _saveStreet();
+      _saveStreet();
+    }
   }
 
   void _getManualLocation() async {
@@ -120,7 +124,7 @@ class _LocationInputState extends State<LocationInput> {
   @override
   void initState() {
     super.initState();
-    _getLocation();
+    _getLocation(context);
   }
 
   @override
