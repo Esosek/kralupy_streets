@@ -19,7 +19,7 @@ class HomeButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         CustomFilledButton(
           'Nová hra',
@@ -29,6 +29,15 @@ class HomeButtons extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 18),
+        CustomFilledButton('Lovení',
+            backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+            onPressed: () {}
+            // () => _switchScreen(
+            //   context,
+            //   const StreetScreen(),
+            // ),
+            ),
+        const SizedBox(height: 45),
         CustomFilledButton(
           'Ulice',
           onPressed: () => _switchScreen(
@@ -36,7 +45,7 @@ class HomeButtons extends StatelessWidget {
             const StreetScreen(),
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 18),
         TextButton.icon(
           onPressed: () => _switchScreen(context, const AddStreet()),
           icon: const Icon(Icons.camera_alt),
