@@ -28,7 +28,6 @@ class _AddStreetState extends State<AddStreet> {
 
   Geolocation? _geolocation;
   File? _streetImage;
-  String? _streetImageUrl;
 
   void _setLocation(
       {required Geolocation geolocation, required String streetName}) {
@@ -108,7 +107,6 @@ class _AddStreetState extends State<AddStreet> {
             '${_streetNameController.text}_latlng=${_geolocation!.latitude},${_geolocation!.longitude}.jpg');
 
     await imageRef.putFile(_streetImage!);
-    _streetImageUrl = await imageRef.getDownloadURL();
     return;
   }
 
