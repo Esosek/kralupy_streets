@@ -69,16 +69,17 @@ class _AddStreetState extends State<AddStreet> {
       _isSending = true;
     });
     await _uploadImage();
-    await db.collection('suggestions').add(
-      {
-        'name': _streetNameController.text,
-        'geolocation': {
-          'lat': _geolocation!.latitude,
-          'lng': _geolocation!.longitude,
-        },
-        'imageUrl': _streetImageUrl,
-      },
-    );
+    // Uploading image with metadata is enough to add new Streets
+    // await db.collection('suggestions').add(
+    //   {
+    //     'name': _streetNameController.text,
+    //     'geolocation': {
+    //       'lat': _geolocation!.latitude,
+    //       'lng': _geolocation!.longitude,
+    //     },
+    //     'imageUrl': _streetImageUrl,
+    //   },
+    // );
     if (!context.mounted) {
       return;
     }
