@@ -15,3 +15,20 @@ class Street {
   final Geolocation geolocation;
   final List<String>? descriptionParagraphs;
 }
+
+class HuntingStreet extends Street {
+  HuntingStreet(
+    Street street, {
+    this.found = false,
+    this.foundDate,
+  }) : super(
+          id: street.id,
+          name: street.name,
+          imageUrl: street.imageUrl,
+          geolocation: street.geolocation,
+          descriptionParagraphs: street.descriptionParagraphs,
+        );
+
+  final bool found;
+  final DateTime? foundDate;
+}
