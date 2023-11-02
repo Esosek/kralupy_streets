@@ -147,6 +147,8 @@ class _AddStreetState extends State<AddStreet> {
                 onPickImage: (selectedPicture) =>
                     _streetImage = selectedPicture,
               ),
+              const SizedBox(height: 16),
+              LocationInput(onLocationSet: _setLocation),
               const SizedBox(height: 12),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -195,8 +197,6 @@ class _AddStreetState extends State<AddStreet> {
                     ),
                 ],
               ),
-              const SizedBox(height: 12),
-              LocationInput(onLocationSet: _setLocation),
             ],
           ),
         ),

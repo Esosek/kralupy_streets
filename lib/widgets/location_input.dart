@@ -26,15 +26,19 @@ class _LocationInputState extends State<LocationInput> {
 
   Future<void> _saveStreet() async {
     final url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$googleApiKey');
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&result_type=route&key=$googleApiKey');
 
     try {
       final response = await http.get(url);
       final resData = json.decode(response.body);
 
-      final String fullAddress =
-          resData['results'][0]['formatted_address'] ?? '';
-      final fetchedStreetName = fullAddress.split(' ')[0];
+      debugPrint('$lat $lng');
+      final List<dynamic> addressComponents =
+          resData['results'][0]['address_components'];
+      final routeComponent = addressComponents
+          .firstWhere((component) => component['types'][0] == 'route');
+      final fetchedStreetName = routeComponent['short_name'] ?? '';
+      debugPrint(fetchedStreetName);
 
       setState(() {
         _isLoading = false;
@@ -44,6 +48,7 @@ class _LocationInputState extends State<LocationInput> {
           geolocation: Geolocation(latitude: lat!, longitude: lng!),
           streetName: fetchedStreetName);
     } catch (e) {
+      debugPrint(e.toString());
       setState(() {
         _isLoading = false;
       });
@@ -132,7 +137,7 @@ class _LocationInputState extends State<LocationInput> {
     return Column(
       children: [
         CircleAvatar(
-          radius: 90,
+          radius: 110,
           backgroundColor: Colors.grey.shade300,
           backgroundImage: lat != null && lng != null
               ? NetworkImage(
