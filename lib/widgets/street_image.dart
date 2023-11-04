@@ -8,7 +8,7 @@ import 'package:kralupy_streets/providers/image_provider.dart';
 
 class StreetImage extends ConsumerWidget {
   const StreetImage(this.street,
-      {this.height = 90, this.condensedError = false, super.key});
+      {this.height, this.condensedError = false, super.key});
 
   final Street street;
   final double? height;

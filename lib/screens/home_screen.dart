@@ -34,7 +34,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     if (streets.isNotEmpty) {
       _isLoading = false;
     }
-    bool isLandscape =
+    final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     return SafeArea(
       child: Scaffold(
