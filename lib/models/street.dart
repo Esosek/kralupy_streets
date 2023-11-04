@@ -18,17 +18,32 @@ class Street {
 
 class HuntingStreet extends Street {
   HuntingStreet(
-    Street street, {
-    this.found = false,
-    this.foundDate,
-  }) : super(
-          id: street.id,
-          name: street.name,
-          imageUrl: street.imageUrl,
-          geolocation: street.geolocation,
-          descriptionParagraphs: street.descriptionParagraphs,
-        );
+      {required super.id,
+      required super.name,
+      required super.imageUrl,
+      required super.geolocation,
+      required super.descriptionParagraphs,
+      this.found = false,
+      this.foundDate,
+      this.publicFinder});
+
+  HuntingStreet copyWith({
+    bool? found,
+    String? foundDate,
+    String? publicFinder,
+  }) {
+    return HuntingStreet(
+        id: id,
+        name: name,
+        imageUrl: imageUrl,
+        geolocation: geolocation,
+        descriptionParagraphs: descriptionParagraphs,
+        found: found ?? this.found,
+        foundDate: foundDate ?? this.foundDate,
+        publicFinder: publicFinder ?? this.publicFinder);
+  }
 
   final bool found;
-  final DateTime? foundDate;
+  final String? foundDate;
+  final String? publicFinder;
 }

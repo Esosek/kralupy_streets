@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kralupy_streets/providers/hunting_street_provider.dart';
 
 import 'package:kralupy_streets/providers/street_provider.dart';
 import 'package:kralupy_streets/widgets/home_buttons.dart';
 
 final db = FirebaseFirestore.instance;
 final analytics = FirebaseAnalytics.instance;
-const appVersion = '1.0.2';
+const appVersion = '1.1.0';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -24,6 +25,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     ref.read(streetProvider.notifier).loadStreets();
+    ref.read(huntingStreetProvider.notifier).loadHuntingStreets();
   }
 
   @override
