@@ -86,7 +86,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
                                     ),
                               ),
                               const SizedBox(height: 7),
-                              if (publicFinder == null)
+                              if (publicFinder != null)
                                 Text(
                                   'První ulovil/a ${activeStreet.publicFinder}',
                                   style: Theme.of(context)
