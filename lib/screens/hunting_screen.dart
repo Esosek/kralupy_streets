@@ -25,6 +25,8 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
   int _selectedStreetIndex = 0;
   late HuntingStreet _activeStreet;
 
+  bool _isDecodingImage = false;
+
   void _onPageChanged(int index) {
     setState(() {
       _selectedStreetIndex = index;
@@ -32,6 +34,9 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
   }
 
   void _huntStreet(HuntingStreet activeStreet) async {
+    setState(() {
+      _isDecodingImage = true;
+    });
     final imagePicker = ImagePicker();
     final takenPicture = await imagePicker.pickImage(
       source: ImageSource.camera,
@@ -42,6 +47,9 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     );
 
     if (takenPicture == null) {
+      setState(() {
+        _isDecodingImage = false;
+      });
       return;
     }
     // START testing asset image
@@ -59,11 +67,28 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     // Production variant
     //final List<String> result = await _analyzeImage(takenPicture.path);
     debugPrint('Recognized text: $result');
-    const keyword = 'PALACKEHO';
+    const keyword = 'KONEVOVA';
+    // Correct street
     if (result.contains(keyword)) {
       print('street name matched');
     }
-
+    // Wrong street
+    else {
+      if (!context.mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          duration: Duration(seconds: 10),
+          content: Text(
+              'Omlouváme se, ale ulice nebyla rozpoznána. Zkuste to prosím znovu a ujistěte se, že je cedule s názvem ulice čitelná a dobře viditelná.'),
+        ),
+      );
+    }
+    setState(() {
+      _isDecodingImage = false;
+    });
     //ref.read(huntingStreetProvider.notifier).huntStreet(activeStreet.id);
   }
 
@@ -155,6 +180,8 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
                         : CustomFilledButton.withIcon(
                             'Ulovit',
                             icon: Icons.camera_alt_rounded,
+                            fixWidth: 90,
+                            isLoading: _isDecodingImage,
                             onPressed: () => _huntStreet(_activeStreet),
                             foregroundColor:
                                 Theme.of(context).colorScheme.onPrimary,
