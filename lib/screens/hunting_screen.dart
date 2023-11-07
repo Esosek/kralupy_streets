@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kralupy_streets/providers/street_provider.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:kralupy_streets/models/street.dart';
@@ -75,24 +76,31 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     //final List<String> result = await _analyzeImage(takenPicture.path);
     debugPrint('Recognized text: $result');
     const keyword = 'PALACKEHO';
-    // Correct street
+    // Hunt successful
     if (result.contains(keyword)) {
-      print('street name matched');
       ref.read(huntingStreetProvider.notifier).huntStreet(activeStreet.id);
+      ref.read(streetProvider.notifier).addStreet(
+            Street(
+              id: activeStreet.id,
+              name: activeStreet.name,
+              imageUrl: activeStreet.imageUrl,
+              geolocation: activeStreet.geolocation,
+              descriptionParagraphs: activeStreet.descriptionParagraphs,
+            ),
+          );
     }
-    // Wrong street
+    // Hunt failed
     else {
-      if (!context.mounted) {
-        return;
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            duration: Duration(seconds: 10),
+            content: Text(
+                'Omlouváme se, ale ulice nebyla rozpoznána. Zkuste to prosím znovu a ujistěte se, že je cedule s názvem ulice čitelná a dobře viditelná.'),
+          ),
+        );
       }
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          duration: Duration(seconds: 10),
-          content: Text(
-              'Omlouváme se, ale ulice nebyla rozpoznána. Zkuste to prosím znovu a ujistěte se, že je cedule s názvem ulice čitelná a dobře viditelná.'),
-        ),
-      );
     }
     setState(() {
       _isDecodingImage = false;

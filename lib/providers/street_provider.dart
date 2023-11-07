@@ -42,6 +42,10 @@ class StreetProvider extends StateNotifier<List<Street>> {
     state = loadedStreets;
     analytics.logEvent(name: 'streets_loaded');
   }
+
+  void addStreet(Street street) {
+    state = [...state, street];
+  }
 }
 
 final streetProvider = StateNotifierProvider<StreetProvider, List<Street>>(

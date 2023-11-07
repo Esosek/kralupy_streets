@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kralupy_streets/models/geolocation.dart';
 
+import 'package:kralupy_streets/models/geolocation.dart';
 import 'package:kralupy_streets/models/street.dart';
+import 'package:kralupy_streets/providers/street_provider.dart';
 
 final db = FirebaseFirestore.instance;
 
@@ -66,7 +67,6 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
     }).toList();
 
     state = updatedHunt;
-
     // TODO: Store it in localStorage alongisde timestamp of end
   }
 
