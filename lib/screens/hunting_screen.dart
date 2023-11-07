@@ -27,6 +27,13 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
 
   bool _isDecodingImage = false;
 
+  @override
+  void initState() {
+    super.initState();
+    final streets = ref.read(huntingStreetProvider);
+    _selectedStreetIndex = streets.indexWhere((street) => !street.found);
+  }
+
   void _onPageChanged(int index) {
     setState(() {
       _selectedStreetIndex = index;
@@ -67,10 +74,11 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     // Production variant
     //final List<String> result = await _analyzeImage(takenPicture.path);
     debugPrint('Recognized text: $result');
-    const keyword = 'KONEVOVA';
+    const keyword = 'PALACKEHO';
     // Correct street
     if (result.contains(keyword)) {
       print('street name matched');
+      ref.read(huntingStreetProvider.notifier).huntStreet(activeStreet.id);
     }
     // Wrong street
     else {
@@ -89,7 +97,6 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     setState(() {
       _isDecodingImage = false;
     });
-    //ref.read(huntingStreetProvider.notifier).huntStreet(activeStreet.id);
   }
 
   Future<List<String>> _analyzeImage(String takenImagePath) async {
