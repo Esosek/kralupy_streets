@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:kralupy_streets/providers/hunting_street_provider.dart';
 import 'package:kralupy_streets/screens/add_street.dart';
 import 'package:kralupy_streets/screens/game_screen.dart';
 import 'package:kralupy_streets/screens/hunting_screen.dart';
 import 'package:kralupy_streets/screens/streets_screen.dart';
 import 'package:kralupy_streets/widgets/ui/custom_filled_button.dart';
 
-class HomeButtons extends StatelessWidget {
+class HomeButtons extends ConsumerWidget {
   const HomeButtons({super.key});
 
   void _switchScreen(BuildContext context, Widget screenWidget) {
@@ -18,7 +20,8 @@ class HomeButtons extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final huntingStreets = ref.watch(huntingStreetProvider);
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -30,15 +33,18 @@ class HomeButtons extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 18),
-        CustomFilledButton(
-          'Lovení',
-          backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
-          onPressed: () => _switchScreen(
-            context,
-            const HuntingScreen(),
+        if (huntingStreets.isNotEmpty)
+          Container(
+            margin: const EdgeInsets.only(bottom: 45),
+            child: CustomFilledButton(
+              'Lovení',
+              backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+              onPressed: () => _switchScreen(
+                context,
+                const HuntingScreen(),
+              ),
+            ),
           ),
-        ),
-        const SizedBox(height: 45),
         CustomFilledButton(
           'Ulice',
           onPressed: () => _switchScreen(

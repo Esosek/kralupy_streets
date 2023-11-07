@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/providers/hunting_street_provider.dart';
 import 'package:kralupy_streets/widgets/hunting_carousel.dart';
 import 'package:kralupy_streets/widgets/ui/custom_filled_button.dart';
-import 'package:path_provider/path_provider.dart';
 
 class HuntingScreen extends ConsumerStatefulWidget {
   const HuntingScreen({super.key});
@@ -32,7 +32,6 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
   }
 
   void _huntStreet(HuntingStreet activeStreet) async {
-    debugPrint('hunting start');
     final imagePicker = ImagePicker();
     final takenPicture = await imagePicker.pickImage(
       source: ImageSource.camera,
@@ -42,10 +41,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
       preferredCameraDevice: CameraDevice.rear,
     );
 
-    debugPrint('picture taken');
-
     if (takenPicture == null) {
-      debugPrint('failed');
       return;
     }
     // START testing asset image
@@ -56,8 +52,10 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     final tempDir = await getTemporaryDirectory();
     final tempFile = await File('${tempDir.path}/street_multiple_text.jpg')
         .writeAsBytes(byteList);
-    // END testing asset image
+
     final List<String> result = await _analyzeImage(tempFile.path);
+    // END testing asset image
+
     // Production variant
     //final List<String> result = await _analyzeImage(takenPicture.path);
     debugPrint('Recognized text: $result');
