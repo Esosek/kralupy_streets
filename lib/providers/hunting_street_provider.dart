@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kralupy_streets/models/geolocation.dart';
 import 'package:kralupy_streets/models/street.dart';
-import 'package:kralupy_streets/providers/street_provider.dart';
 
 final db = FirebaseFirestore.instance;
 

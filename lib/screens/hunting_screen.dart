@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:kralupy_streets/providers/street_provider.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:kralupy_streets/models/street.dart';
@@ -79,15 +78,6 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     // Hunt successful
     if (result.contains(keyword)) {
       ref.read(huntingStreetProvider.notifier).huntStreet(activeStreet.id);
-      ref.read(streetProvider.notifier).addStreet(
-            Street(
-              id: activeStreet.id,
-              name: activeStreet.name,
-              imageUrl: activeStreet.imageUrl,
-              geolocation: activeStreet.geolocation,
-              descriptionParagraphs: activeStreet.descriptionParagraphs,
-            ),
-          );
     }
     // Hunt failed
     else {

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kralupy_streets/providers/hunting_street_provider.dart';
 
+import 'package:kralupy_streets/providers/hunting_street_provider.dart';
 import 'package:kralupy_streets/providers/street_provider.dart';
 import 'package:kralupy_streets/widgets/home_buttons.dart';
 
@@ -24,7 +24,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    ref.read(streetProvider.notifier).loadStreets();
+    ref.read(publicStreetProvider.notifier).loadStreets();
     ref.read(huntingStreetProvider.notifier).loadHuntingStreets();
   }
 

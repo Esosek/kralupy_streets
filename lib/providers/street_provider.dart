@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kralupy_streets/models/geolocation.dart';
 import 'package:kralupy_streets/models/street.dart';
+import 'package:kralupy_streets/providers/hunting_street_provider.dart';
 
 final db = FirebaseFirestore.instance;
 final analytics = FirebaseAnalytics.instance;
@@ -48,5 +49,23 @@ class StreetProvider extends StateNotifier<List<Street>> {
   }
 }
 
-final streetProvider = StateNotifierProvider<StreetProvider, List<Street>>(
-    (ref) => StreetProvider());
+final publicStreetProvider =
+    StateNotifierProvider<StreetProvider, List<Street>>(
+        (ref) => StreetProvider());
+
+final streetProvider = Provider<List<Street>>((ref) {
+  final publicStreets = ref.watch(publicStreetProvider);
+  final huntingStreets = ref.watch(huntingStreetProvider);
+
+  final transformedHuntingStreets =
+      huntingStreets.where((street) => street.found).map(
+            (street) => Street(
+                id: street.id,
+                name: street.name,
+                imageUrl: street.imageUrl,
+                geolocation: street.geolocation,
+                descriptionParagraphs: street.descriptionParagraphs),
+          );
+
+  return [...publicStreets, ...transformedHuntingStreets];
+});
