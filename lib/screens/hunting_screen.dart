@@ -40,6 +40,10 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     });
   }
 
+  void _debugHuntStreet(HuntingStreet activeStreet) {
+    ref.read(huntingStreetProvider.notifier).huntStreet(activeStreet.id);
+  }
+
   void _huntStreet(HuntingStreet activeStreet) async {
     setState(() {
       _isDecodingImage = true;
@@ -187,7 +191,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
                             icon: Icons.camera_alt_rounded,
                             fixWidth: 90,
                             isLoading: _isDecodingImage,
-                            onPressed: () => _huntStreet(_activeStreet),
+                            onPressed: () => _debugHuntStreet(_activeStreet),
                             foregroundColor:
                                 Theme.of(context).colorScheme.onPrimary,
                             backgroundColor:

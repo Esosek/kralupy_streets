@@ -33,7 +33,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   @override
   void initState() {
     super.initState();
-    streets = ref.read(streetProvider);
+    streets = ref.read(enrichedStreetProvider);
     quizGenerator = QuizGenerator(streets: streets, questionsCount: 10);
     questions = quizGenerator.generateQuestions();
   }

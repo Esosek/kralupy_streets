@@ -24,13 +24,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    ref.read(publicStreetProvider.notifier).loadStreets();
+    ref.read(originalStreetProvider.notifier).loadStreets();
     ref.read(huntingStreetProvider.notifier).loadHuntingStreets();
   }
 
   @override
   Widget build(BuildContext context) {
-    final streets = ref.watch(streetProvider);
+    final streets = ref.watch(enrichedStreetProvider);
     if (streets.isNotEmpty) {
       _isLoading = false;
     }
