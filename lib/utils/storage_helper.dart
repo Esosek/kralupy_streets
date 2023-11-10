@@ -1,15 +1,22 @@
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:kralupy_streets/utils/custom_logger.dart';
 
 class StorageHelper {
   StorageHelper() {
     _init();
   }
   late SharedPreferences _prefs;
+  final log = CustomLogger('StorageHelper');
 
   void _init() async {
     _prefs = await SharedPreferences.getInstance();
-    debugPrint('StorageHelper: Initialized');
+
+    log.trace('Debugging logs firing');
+    log.debug('Init ended');
+    log.info('Succesfuly initialized');
+    log.warning('This is a warning message');
+    log.error('This is an error message');
   }
 
   void addIntToList(String key, int value) {
@@ -30,10 +37,10 @@ class StorageHelper {
   Future<void> removeKey(String key) async {
     try {
       await _prefs.remove(key);
-      debugPrint('StorageHelper: Removing $key');
+      log.info('Removing $key');
       return;
     } catch (e) {
-      debugPrint('StorageHelper: Failed to remove key $key: $e');
+      log.warning('Failed to remove key $key: $e');
     }
   }
 
@@ -43,7 +50,7 @@ class StorageHelper {
         removeKey(key);
       }
     } catch (e) {
-      debugPrint('StorageHelper: Failed to remove keys: $e');
+      log.warning('Failed to remove keys: $e');
     }
   }
 
@@ -68,17 +75,17 @@ class StorageHelper {
         final stringList = value.map((v) => v.toString()).toList();
         _prefs.setStringList(key, stringList);
       } else {
-        throw Exception('StorageHelper: Unsupported data type.');
+        log.error('Trying to setValue for unsupported data type');
       }
-      debugPrint('StorageHelper: Storing $key: $value');
+      log.info('Storing $key: $value');
     } catch (e) {
-      debugPrint('StorageHelper: Failed to set value for key $key: $e');
+      log.warning('Failed to set value for key $key: $e');
     }
   }
 
   // Supported types: int, String, List<int>
   T? _getValue<T>(String key) {
-    debugPrint('StorageHelper: Reading $key');
+    log.info('Fetching $key value');
     try {
       if (T == int) {
         return _prefs.getInt(key) as T?;
@@ -97,10 +104,11 @@ class StorageHelper {
             .toList();
         return intList as T?;
       } else {
-        throw Exception('StorageHelper: Unsupported data type.');
+        log.error('Trying to getValue for unsupported data type');
+        return null;
       }
     } catch (e) {
-      debugPrint('StorageHelper: Failed to get value for key $key: $e');
+      log.warning('Failed to get value for key $key: $e');
       return null;
     }
   }
