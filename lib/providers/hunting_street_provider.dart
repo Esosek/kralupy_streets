@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kralupy_streets/models/geolocation.dart';
@@ -54,7 +53,7 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
       }
 
       state = await _getLocalStreets(huntingStreets, currentHunting[0]['end']);
-      log.trace('HuntingStreets successfully loaded');
+      log.info('HuntingStreets successfully loaded');
     } catch (e) {
       log.error('Fetching hunting failed: $e');
       log.trace('No active hunt, clear stored data');
@@ -99,7 +98,7 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
     }
 
     if (storedTimestamp != activeHuntEnd) {
-      log.trace('Clearing stored data');
+      log.info('Hunt ended, clearing stored data');
       await _clearStoredData();
       storage.setIntValue(huntTimestampKey, activeHuntEnd);
       return fetchedStreets;

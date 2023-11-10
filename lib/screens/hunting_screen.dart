@@ -1,16 +1,13 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:kralupy_streets/utils/custom_logger.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/providers/hunting_street_provider.dart';
 import 'package:kralupy_streets/widgets/hunting_carousel.dart';
 import 'package:kralupy_streets/widgets/ui/custom_filled_button.dart';
+import 'package:kralupy_streets/utils/custom_logger.dart';
+import 'package:kralupy_streets/utils/text_recognizer.dart';
 
 class HuntingScreen extends ConsumerStatefulWidget {
   const HuntingScreen({super.key});
@@ -20,10 +17,8 @@ class HuntingScreen extends ConsumerStatefulWidget {
 }
 
 class _HuntingScreenState extends ConsumerState<HuntingScreen> {
-  static const platform =
-      MethodChannel('com.example.kralupy_streets/text_recognition');
-
   final log = CustomLogger('HuntingScreen');
+  final textRecognizer = TextRecognizer(debugMode: true, successRatio: .5);
 
   int _selectedStreetIndex = 0;
   late HuntingStreet _activeStreet;
@@ -35,16 +30,17 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     super.initState();
     final streets = ref.read(huntingStreetProvider);
     _selectedStreetIndex = streets.indexWhere((street) => !street.found);
+
+    // Prevents crash when everything is hunted
+    if (_selectedStreetIndex.isNegative) {
+      _selectedStreetIndex = 0;
+    }
   }
 
   void _onPageChanged(int index) {
     setState(() {
       _selectedStreetIndex = index;
     });
-  }
-
-  void _debugHuntStreet(HuntingStreet activeStreet) {
-    ref.read(huntingStreetProvider.notifier).huntStreet(activeStreet.id);
   }
 
   void _huntStreet(HuntingStreet activeStreet) async {
@@ -66,28 +62,14 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
       });
       return;
     }
-    // START testing asset image
-    final ByteData assetData =
-        await rootBundle.load('assets/images/street_multiple_text.jpg');
-    final List<int> byteList = assetData.buffer.asUint8List();
+    final isValidImage = await textRecognizer.analyzeImageForText(
+        takenPicture.path, activeStreet.keyword);
 
-    final tempDir = await getTemporaryDirectory();
-    final tempFile = await File('${tempDir.path}/street_multiple_text.jpg')
-        .writeAsBytes(byteList);
-
-    final List<String> result = await _analyzeImage(tempFile.path);
-    // END testing asset image
-
-    // Production variant
-    //final List<String> result = await _analyzeImage(takenPicture.path);
-    log.trace('Recognized text: $result');
-    const keyword = 'PALACKEHO';
-    // Hunt successful
-    if (result.contains(keyword)) {
+    if (isValidImage) {
+      log.info('Street ${activeStreet.name} was successfully hunted');
       ref.read(huntingStreetProvider.notifier).huntStreet(activeStreet.id);
-    }
-    // Hunt failed
-    else {
+    } else {
+      log.trace('Street hunting failed, showing SnackBar');
       if (context.mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -102,18 +84,6 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     setState(() {
       _isDecodingImage = false;
     });
-  }
-
-  Future<List<String>> _analyzeImage(String takenImagePath) async {
-    try {
-      final result = await platform.invokeMethod<List>('analyzeImage', {
-        'imagePath': takenImagePath,
-      });
-      return result?.map((item) => item.toString()).toList() ?? [];
-    } on PlatformException catch (e) {
-      log.error(e.message ?? 'Analyzing image failed');
-      return [];
-    }
   }
 
   @override
@@ -194,7 +164,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
                             icon: Icons.camera_alt_rounded,
                             fixWidth: 90,
                             isLoading: _isDecodingImage,
-                            onPressed: () => _debugHuntStreet(_activeStreet),
+                            onPressed: () => _huntStreet(_activeStreet),
                             foregroundColor:
                                 Theme.of(context).colorScheme.onPrimary,
                             backgroundColor:
