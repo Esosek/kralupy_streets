@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kralupy_streets/models/geolocation.dart';
 import 'package:kralupy_streets/models/street.dart';
+import 'package:kralupy_streets/utils/custom_logger.dart';
 import 'package:kralupy_streets/utils/storage_helper.dart';
 
 final db = FirebaseFirestore.instance;
@@ -15,10 +16,11 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
   static const huntStreetsIdsKey = 'huntStreetsIds';
 
   final storage = StorageHelper();
+  final log = CustomLogger('HuntingStreetProvider');
 
   void loadHuntingStreets() async {
     final currentTimestamp = _getCurrentTimestamp();
-    debugPrint('Current time: $currentTimestamp');
+    log.trace('Current time: $currentTimestamp');
     try {
       final futureHuntings = await db
           .collection('hunting')
@@ -47,15 +49,15 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
           );
           huntingStreets.add(street);
         } catch (e) {
-          debugPrint('HuntingStreet transformation failed: $e');
+          log.error('HuntingStreet transformation failed: $e');
         }
       }
 
       state = await _getLocalStreets(huntingStreets, currentHunting[0]['end']);
-      debugPrint('HuntingStreets successfully loaded');
+      log.trace('HuntingStreets successfully loaded');
     } catch (e) {
-      debugPrint('Fetching hunting failed: $e');
-      debugPrint('StorageHelper: No active hunt, clear stored data');
+      log.error('Fetching hunting failed: $e');
+      log.trace('No active hunt, clear stored data');
       _clearStoredData();
     }
   }
@@ -86,24 +88,24 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
 
   Future<List<HuntingStreet>> _getLocalStreets(
       List<HuntingStreet> fetchedStreets, int activeHuntEnd) async {
-    debugPrint('StorageHelper: Active hunt ends $activeHuntEnd');
+    log.trace('Active hunt ends $activeHuntEnd');
     final storedTimestamp = _getStoredTimestamp();
     final storedHuntStreetsIds = _getStoredHuntStreetsIds();
 
     if (storedTimestamp == null) {
-      debugPrint('StorageHelper: No timestamp found, storing current');
+      log.trace('No timestamp found, storing current');
       storage.setIntValue(huntTimestampKey, activeHuntEnd);
       return fetchedStreets;
     }
 
     if (storedTimestamp != activeHuntEnd) {
-      debugPrint('StorageHelper: Clearing stored data');
+      log.trace('Clearing stored data');
       await _clearStoredData();
       storage.setIntValue(huntTimestampKey, activeHuntEnd);
       return fetchedStreets;
     }
 
-    debugPrint('StorageHelper: Updating streets with local records');
+    log.info('Updating streets with local records');
     return _updateFoundStatus(fetchedStreets, storedHuntStreetsIds);
   }
 

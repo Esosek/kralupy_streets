@@ -53,9 +53,9 @@ class QuizGenerator {
   //     for (var street in question.options) {
   //       streetNames.add(street.name);
   //     }
-  //     print(streetNames);
-  //     print(question.correctAnswer.name);
-  //     print('___');
+  //     log.debug(streetNames);
+  //     log.debug(question.correctAnswer.name);
+  //     log.debug('___');
   //   }
   // }
 }

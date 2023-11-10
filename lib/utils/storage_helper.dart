@@ -11,12 +11,7 @@ class StorageHelper {
 
   void _init() async {
     _prefs = await SharedPreferences.getInstance();
-
-    log.trace('Debugging logs firing');
-    log.debug('Init ended');
-    log.info('Succesfuly initialized');
-    log.warning('This is a warning message');
-    log.error('This is an error message');
+    log.trace('Successfully initialized');
   }
 
   void addIntToList(String key, int value) {
@@ -37,7 +32,7 @@ class StorageHelper {
   Future<void> removeKey(String key) async {
     try {
       await _prefs.remove(key);
-      log.info('Removing $key');
+      log.trace('Removing $key');
       return;
     } catch (e) {
       log.warning('Failed to remove key $key: $e');
@@ -50,7 +45,7 @@ class StorageHelper {
         removeKey(key);
       }
     } catch (e) {
-      log.warning('Failed to remove keys: $e');
+      log.warning('Failed to remove keys $keys: $e');
     }
   }
 
@@ -77,7 +72,7 @@ class StorageHelper {
       } else {
         log.error('Trying to setValue for unsupported data type');
       }
-      log.info('Storing $key: $value');
+      log.trace('Storing $key: $value');
     } catch (e) {
       log.warning('Failed to set value for key $key: $e');
     }
@@ -85,7 +80,7 @@ class StorageHelper {
 
   // Supported types: int, String, List<int>
   T? _getValue<T>(String key) {
-    log.info('Fetching $key value');
+    log.trace('Fetching $key value');
     try {
       if (T == int) {
         return _prefs.getInt(key) as T?;

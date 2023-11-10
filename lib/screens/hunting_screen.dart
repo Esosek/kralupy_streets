@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kralupy_streets/utils/custom_logger.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:kralupy_streets/models/street.dart';
@@ -21,6 +22,8 @@ class HuntingScreen extends ConsumerStatefulWidget {
 class _HuntingScreenState extends ConsumerState<HuntingScreen> {
   static const platform =
       MethodChannel('com.example.kralupy_streets/text_recognition');
+
+  final log = CustomLogger('HuntingScreen');
 
   int _selectedStreetIndex = 0;
   late HuntingStreet _activeStreet;
@@ -77,7 +80,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
 
     // Production variant
     //final List<String> result = await _analyzeImage(takenPicture.path);
-    debugPrint('Recognized text: $result');
+    log.trace('Recognized text: $result');
     const keyword = 'PALACKEHO';
     // Hunt successful
     if (result.contains(keyword)) {
@@ -108,7 +111,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
       });
       return result?.map((item) => item.toString()).toList() ?? [];
     } on PlatformException catch (e) {
-      debugPrint(e.message);
+      log.error(e.message ?? 'Analyzing image failed');
       return [];
     }
   }
