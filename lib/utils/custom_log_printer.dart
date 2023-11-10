@@ -9,10 +9,12 @@ class CustomLogPrinter extends LogPrinter {
       errorMethodCount: 3,
       methodCount: 0,
       lineLength: 50,
-      levelColors: PrettyPrinter.defaultLevelColors,
+      levelColors: {
+        ...PrettyPrinter.defaultLevelColors,
+        Level.debug: const AnsiColor.fg(82)
+      },
       levelEmojis: {
         ...PrettyPrinter.defaultLevelEmojis,
-        Level.trace: '',
         Level.debug: '🌱',
         Level.info: '🔹',
         Level.warning: '🔸',
