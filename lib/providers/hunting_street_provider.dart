@@ -18,19 +18,9 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
   final log = CustomLogger('HuntingStreetProvider');
 
   void loadHuntingStreets() async {
-    final currentTimestamp = _getCurrentTimestamp();
-    log.trace('Current time: $currentTimestamp');
     try {
-      final futureHuntings = await db
-          .collection('hunting')
-          .where('end', isGreaterThan: currentTimestamp)
-          .get();
-
-      final currentHunting = futureHuntings.docs
-          .where((hunt) => hunt['start'] <= currentTimestamp)
-          .toList();
-
-      final List<dynamic> streetsSnapshots = currentHunting[0]['streets'];
+      final currentHunting = await getCurrentHunting();
+      final List<dynamic> streetsSnapshots = currentHunting['streets'];
 
       final List<HuntingStreet> huntingStreets = [];
       for (var snapshot in streetsSnapshots) {
@@ -52,7 +42,7 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
         }
       }
 
-      state = await _getLocalStreets(huntingStreets, currentHunting[0]['end']);
+      state = await _getLocalStreets(huntingStreets, currentHunting['end']);
       log.info('HuntingStreets successfully loaded');
     } catch (e) {
       log.error('Fetching hunting failed: $e');
@@ -61,13 +51,17 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
     }
   }
 
-  void huntStreet(int streetId) {
+  void huntStreet(int streetId, String? username) {
     final now = DateTime.now();
     final formattedDate = '${now.day}.${now.month}.${now.year}';
 
     final updatedHunt = state.map((street) {
       if (street.id == streetId) {
-        return street.copyWith(found: true, foundDate: formattedDate);
+        return street.copyWith(
+          found: true,
+          foundDate: formattedDate,
+          publicFinder: street.publicFinder ?? username,
+        );
       }
       return street;
     }).toList();
@@ -76,6 +70,30 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
 
     storage.setStringValue(streetId.toString(), formattedDate);
     storage.addIntToList(huntStreetsIdsKey, streetId);
+  }
+
+  Future<Map<String, dynamic>> getCurrentHunting() async {
+    final currentTimestamp = _getCurrentTimestamp();
+    log.trace('Current time: $currentTimestamp');
+    try {
+      final futureHuntings = await db
+          .collection('hunting')
+          .where('end', isGreaterThan: currentTimestamp)
+          .get();
+
+      final huntDocs = futureHuntings.docs
+          .where((hunt) => hunt['start'] <= currentTimestamp)
+          .toList();
+      if (huntDocs.isNotEmpty) {
+        return huntDocs[0].data();
+      } else {
+        log.warning('No active hunting found');
+        return {};
+      }
+    } catch (e) {
+      log.error('Failed to fetch active hunting: $e');
+      return {};
+    }
   }
 
   int _getCurrentTimestamp() {

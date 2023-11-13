@@ -3,15 +3,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:kralupy_streets/utils/custom_logger.dart';
 
 class StorageHelper {
-  StorageHelper() {
+  StorageHelper._privateConstructor() {
     _init();
   }
+  static final StorageHelper _instance = StorageHelper._privateConstructor();
+
+  factory StorageHelper() => _instance;
+
   late SharedPreferences _prefs;
   final log = CustomLogger('StorageHelper');
+  bool _isInitialized = false;
 
   void _init() async {
+    if (_isInitialized) {
+      return;
+    }
     _prefs = await SharedPreferences.getInstance();
     log.trace('Successfully initialized');
+    _isInitialized = true;
   }
 
   void addIntToList(String key, int value) {

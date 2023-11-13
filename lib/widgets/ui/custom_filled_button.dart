@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
 
 class CustomFilledButton extends StatelessWidget {
-  const CustomFilledButton(
-    this.label, {
-    super.key,
-    required this.onPressed,
-    this.foregroundColor,
-    this.backgroundColor,
-    this.isLoading = false,
-    this.fixWidth,
-  }) : icon = null;
+  const CustomFilledButton(this.label,
+      {super.key,
+      required this.onPressed,
+      this.foregroundColor,
+      this.backgroundColor,
+      this.isLoading = false,
+      this.width,
+      this.fitMaxWidth = false})
+      : icon = null;
 
-  const CustomFilledButton.withIcon(
-    this.label, {
-    super.key,
-    required this.onPressed,
-    required this.icon,
-    this.foregroundColor,
-    this.backgroundColor,
-    this.isLoading = false,
-    this.fixWidth,
-  });
+  const CustomFilledButton.withIcon(this.label,
+      {super.key,
+      required this.onPressed,
+      required this.icon,
+      this.foregroundColor,
+      this.backgroundColor,
+      this.isLoading = false,
+      this.width,
+      this.fitMaxWidth = false});
 
   final String label;
   final void Function() onPressed;
@@ -28,12 +27,14 @@ class CustomFilledButton extends StatelessWidget {
   final Color? backgroundColor;
   final IconData? icon;
   final bool isLoading;
-  final double? fixWidth;
+  final double? width;
+  final bool fitMaxWidth;
 
   @override
   Widget build(BuildContext context) {
     Widget btnContent = Text(
       label,
+      textAlign: TextAlign.center,
       style: Theme.of(context).textTheme.labelLarge!.copyWith(
             color: foregroundColor ??
                 Theme.of(context).colorScheme.onSecondaryContainer,
@@ -46,8 +47,9 @@ class CustomFilledButton extends StatelessWidget {
       );
     } else if (icon != null) {
       btnContent = Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: fitMaxWidth ? MainAxisSize.max : MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (icon != null)
             Container(
@@ -67,7 +69,10 @@ class CustomFilledButton extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-        child: SizedBox(width: fixWidth, child: btnContent),
+        child: SizedBox(
+          width: fitMaxWidth ? double.infinity : width,
+          child: btnContent,
+        ),
       ),
     );
   }
