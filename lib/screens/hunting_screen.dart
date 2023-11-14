@@ -176,7 +176,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     _activeStreet = streets[_selectedStreetIndex];
     final isFound = _activeStreet.found;
     final streetName = isFound ? _activeStreet.name : '???';
-    final publicFinder = _activeStreet.publicFinder?.trim();
+    final publicFinder = _activeStreet.finder?.trim();
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
 
@@ -232,7 +232,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
                               const SizedBox(height: 7),
                               if (publicFinder != null)
                                 Text(
-                                  'První ulovil/a ${_activeStreet.publicFinder}',
+                                  'První ulovil/a ${_activeStreet.finder}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleLarge!

@@ -19,6 +19,7 @@ class StreetProvider extends StateNotifier<List<Street>> {
       for (QueryDocumentSnapshot street in streetsData.docs) {
         // Handles database errors
         try {
+          final finder = street['finder'] as String;
           final newStreet = Street(
             id: street['id'],
             name: street['name'],
@@ -30,6 +31,7 @@ class StreetProvider extends StateNotifier<List<Street>> {
               latitude: street['geolocation']['lat'],
               longitude: street['geolocation']['lng'],
             ),
+            finder: finder.isEmpty ? null : finder,
           );
           loadedStreets.add(newStreet);
         } catch (e) {
@@ -56,11 +58,13 @@ final enrichedStreetProvider = Provider<List<Street>>((ref) {
   final transformedHuntingStreets =
       huntingStreets.where((street) => street.found).map(
             (street) => Street(
-                id: street.id,
-                name: street.name,
-                imageUrl: street.imageUrl,
-                geolocation: street.geolocation,
-                descriptionParagraphs: street.descriptionParagraphs),
+              id: street.id,
+              name: street.name,
+              imageUrl: street.imageUrl,
+              geolocation: street.geolocation,
+              descriptionParagraphs: street.descriptionParagraphs,
+              finder: street.finder,
+            ),
           );
 
   return [...publicStreets, ...transformedHuntingStreets];

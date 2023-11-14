@@ -7,6 +7,7 @@ class Street {
     required this.imageUrl,
     required this.geolocation,
     this.descriptionParagraphs,
+    this.finder,
   });
 
   final int id;
@@ -14,6 +15,7 @@ class Street {
   final String imageUrl;
   final Geolocation geolocation;
   final List<String>? descriptionParagraphs;
+  final String? finder;
 }
 
 class HuntingStreet extends Street {
@@ -24,23 +26,23 @@ class HuntingStreet extends Street {
     required Geolocation geolocation,
     List<String>? descriptionParagraphs,
     String? keyword,
+    String? finder,
     this.found = false,
     this.foundDate,
-    this.publicFinder,
   }) : super(
-          id: id,
-          name: name,
-          imageUrl: imageUrl,
-          geolocation: geolocation,
-          descriptionParagraphs: descriptionParagraphs,
-        ) {
+            id: id,
+            name: name,
+            imageUrl: imageUrl,
+            geolocation: geolocation,
+            descriptionParagraphs: descriptionParagraphs,
+            finder: finder) {
     this.keyword = keyword ?? name;
   }
 
   HuntingStreet copyWith({
     bool? found,
     String? foundDate,
-    String? publicFinder,
+    String? finder,
   }) {
     return HuntingStreet(
         id: id,
@@ -51,7 +53,7 @@ class HuntingStreet extends Street {
         keyword: keyword,
         found: found ?? this.found,
         foundDate: foundDate ?? this.foundDate,
-        publicFinder: publicFinder ?? this.publicFinder);
+        finder: finder ?? this.finder);
   }
 
   /// Text recognition is looking for this
@@ -59,5 +61,4 @@ class HuntingStreet extends Street {
   late String keyword;
   final bool found;
   final String? foundDate;
-  final String? publicFinder;
 }

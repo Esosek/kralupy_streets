@@ -35,7 +35,7 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
             ),
             descriptionParagraphs:
                 List<String>.from(snapshot['descriptionParagraphs']),
-            publicFinder: snapshot['finder'],
+            finder: snapshot['finder'],
           );
           huntingStreets.add(street);
         } catch (e) {
@@ -61,7 +61,7 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
         return street.copyWith(
           found: true,
           foundDate: formattedDate,
-          publicFinder: street.publicFinder ?? username,
+          finder: street.finder ?? username,
         );
       }
       return street;
