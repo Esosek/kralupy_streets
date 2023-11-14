@@ -19,7 +19,7 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
 
   void loadHuntingStreets() async {
     try {
-      final currentHunting = await getCurrentHunting();
+      final currentHunting = await _getCurrentHunting();
       final List<dynamic> streetsSnapshots = currentHunting['streets'];
 
       final List<HuntingStreet> huntingStreets = [];
@@ -35,6 +35,7 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
             ),
             descriptionParagraphs:
                 List<String>.from(snapshot['descriptionParagraphs']),
+            publicFinder: snapshot['finder'],
           );
           huntingStreets.add(street);
         } catch (e) {
@@ -68,11 +69,38 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
 
     state = updatedHunt;
 
+    if (username != null) {
+      // User is first and valid nickname was stored
+      _storeFinder(streetId, username);
+    }
+
     storage.setStringValue(streetId.toString(), formattedDate);
     storage.addIntToList(huntStreetsIdsKey, streetId);
   }
 
-  Future<Map<String, dynamic>> getCurrentHunting() async {
+  Future<bool> hasFinder(int streetId) async {
+    try {
+      final currentHunt = await _getCurrentHunting();
+      final List<dynamic> streetsSnapshots = currentHunt['streets'];
+
+      for (var streetSnapshot in streetsSnapshots) {
+        if (streetSnapshot['id'] == streetId) {
+          if (streetSnapshot['finder'] != null) {
+            log.trace(
+                'Street $streetId has finder ${streetSnapshot['finder']} already');
+            return true;
+          }
+        }
+      }
+      log.trace('No finder found for street $streetId');
+      return false;
+    } catch (e) {
+      log.error('Checking street finder failed: $e');
+      return true;
+    }
+  }
+
+  Future<Map<String, dynamic>> _getCurrentHunting() async {
     final currentTimestamp = _getCurrentTimestamp();
     log.trace('Current time: $currentTimestamp');
     try {
@@ -85,7 +113,10 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
           .where((hunt) => hunt['start'] <= currentTimestamp)
           .toList();
       if (huntDocs.isNotEmpty) {
-        return huntDocs[0].data();
+        return {
+          'id': huntDocs[0].id,
+          ...huntDocs[0].data(),
+        };
       } else {
         log.warning('No active hunting found');
         return {};
@@ -93,6 +124,30 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
     } catch (e) {
       log.error('Failed to fetch active hunting: $e');
       return {};
+    }
+  }
+
+  Future<void> _storeFinder(int streetId, String username) async {
+    final formattedUsername =
+        username[0].toUpperCase() + username.substring(1).toLowerCase();
+    final currentHunting = await _getCurrentHunting();
+    final List<dynamic> streetsSnapshots = currentHunting['streets'];
+    // Modifies the finder field for the active street
+    for (var street in streetsSnapshots) {
+      if (street['id'] == streetId) {
+        street['finder'] = formattedUsername;
+      }
+    }
+
+    try {
+      db
+          .collection('hunting')
+          .doc(currentHunting['id'])
+          .update({'streets': streetsSnapshots});
+
+      log.trace('Updated street $streetId with finder "$username"');
+    } catch (e) {
+      log.trace('Updating street finder failed: $e');
     }
   }
 

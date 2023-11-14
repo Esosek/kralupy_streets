@@ -57,8 +57,6 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
   }
 
   void _huntStreet(HuntingStreet activeStreet) async {
-    // TODO: Check if there is still no finder
-    // TODO: Store user as finder
     setState(() {
       _isDecodingImage = true;
     });
@@ -81,11 +79,12 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
         takenPicture.path, activeStreet.keyword);
 
     if (isValidImage) {
-      if (_isPlayerFirst) {
+      String username = '';
+      if (await _isPlayerFirst) {
         await _showFinderModal();
+        username = _usernameTextController.text.trim();
       }
       log.info('Street ${activeStreet.name} was successfully hunted');
-      final username = _usernameTextController.text.trim();
       ref.read(huntingStreetProvider.notifier).huntStreet(
             activeStreet.id,
             username.isEmpty ? null : username,
@@ -108,8 +107,11 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     });
   }
 
-  bool get _isPlayerFirst {
-    return true;
+  Future<bool> get _isPlayerFirst async {
+    final hasFinder = await ref
+        .read(huntingStreetProvider.notifier)
+        .hasFinder(_activeStreet.id);
+    return !hasFinder;
   }
 
   Future<void> _showFinderModal() async {
@@ -164,7 +166,6 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
 
   void _sendFinder() {
     final username = _usernameTextController.text;
-    log.debug('Storing finder "$username" to street "${_activeStreet.name}"');
     Navigator.of(context).pop();
     storage.setStringValue(usernamePrefsKey, username);
   }
