@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kralupy_streets/utils/custom_logger.dart';
 
 import 'package:kralupy_streets/utils/storage_helper.dart';
 import 'package:kralupy_streets/widgets/ui/custom_filled_button.dart';
@@ -16,8 +17,11 @@ class FinderModal extends StatefulWidget {
 class _FinderModalState extends State<FinderModal> {
   static const usernamePrefsKey = 'username';
   final storage = StorageHelper();
+  final log = CustomLogger('FinderModal');
 
   final _usernameTextController = TextEditingController();
+
+  bool hasError = false;
 
   @override
   void initState() {
@@ -34,15 +38,28 @@ class _FinderModalState extends State<FinderModal> {
 
   void _sendFinder() {
     final username = _getUsername();
-    Navigator.of(context).pop(_getUsername());
-    if (username != null) {
-      storage.setStringValue(usernamePrefsKey, username);
+    // validation check
+    if (username == null ||
+        username.length < 2 ||
+        username.length > 15 ||
+        !_containsOnlyLetters(username)) {
+      setState(() => hasError = true);
+      log.trace('Username invalid, displaying error message');
+      return;
     }
+    log.trace('Username valid, closing modal');
+    Navigator.of(context).pop(_getUsername());
+    storage.setStringValue(usernamePrefsKey, username);
   }
 
   String? _getUsername() {
     final username = _usernameTextController.text.trim();
     return username.isEmpty ? null : username;
+  }
+
+  bool _containsOnlyLetters(String input) {
+    final RegExp regex = RegExp(r'^[a-zA-Z]+$');
+    return regex.hasMatch(input);
   }
 
   @override
@@ -68,15 +85,37 @@ class _FinderModalState extends State<FinderModal> {
           const SizedBox(height: 8),
           TextField(
             controller: _usernameTextController,
+            onChanged: (value) => setState(() => hasError = false),
             maxLength: 15,
             autocorrect: false,
             decoration: const InputDecoration(
               label: Text('Přezdívka'),
             ),
           ),
+          if (hasError)
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const Icon(
+                  Icons.warning,
+                  color: Colors.red,
+                  size: 20,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  'Přezdívka by měla obsahovat minimálně 2 písmena a žádné jiné znaky.',
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        color: Colors.red,
+                      ),
+                ),
+              ],
+            ),
           const SizedBox(height: 12),
           TextButton(
-            onPressed: () => Navigator.of(context).pop(null),
+            onPressed: () {
+              log.trace('Username skipped, closing modal');
+              Navigator.of(context).pop(null);
+            },
             child: const Text('Přeskočit'),
           ),
           const SizedBox(height: 8),
