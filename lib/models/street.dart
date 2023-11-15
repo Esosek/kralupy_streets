@@ -25,7 +25,7 @@ class HuntingStreet extends Street {
     required String imageUrl,
     required Geolocation geolocation,
     List<String>? descriptionParagraphs,
-    String? keyword,
+    List<String>? keywords,
     String? finder,
     this.found = false,
     this.foundDate,
@@ -36,7 +36,7 @@ class HuntingStreet extends Street {
             geolocation: geolocation,
             descriptionParagraphs: descriptionParagraphs,
             finder: finder) {
-    this.keyword = keyword ?? name;
+    this.keywords = keywords ?? [name];
   }
 
   HuntingStreet copyWith({
@@ -50,7 +50,7 @@ class HuntingStreet extends Street {
         imageUrl: imageUrl,
         geolocation: geolocation,
         descriptionParagraphs: descriptionParagraphs,
-        keyword: keyword,
+        keywords: keywords,
         found: found ?? this.found,
         foundDate: foundDate ?? this.foundDate,
         finder: finder ?? this.finder);
@@ -58,7 +58,7 @@ class HuntingStreet extends Street {
 
   /// Text recognition is looking for this
   /// If it's not povided => street name is assigned
-  late String keyword;
+  late List<String> keywords;
   final bool found;
   final String? foundDate;
 }

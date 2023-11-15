@@ -35,6 +35,11 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
             ),
             descriptionParagraphs:
                 List<String>.from(snapshot['descriptionParagraphs']),
+            keywords: (snapshot['keywords'] as List<dynamic>)
+                .map<String>((dynamic keyword) {
+              // Type cast each keyword to a String
+              return keyword.toString();
+            }).toList(),
             finder: snapshot['finder'],
           );
           huntingStreets.add(street);

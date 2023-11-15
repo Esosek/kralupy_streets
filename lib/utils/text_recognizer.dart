@@ -15,27 +15,31 @@ class TextRecognizer {
       MethodChannel('com.example.kralupy_streets/text_recognition');
   final log = CustomLogger('TextRecognizer');
 
-  Future<bool> analyzeImageForText(String takenImagePath, String text) async {
+  Future<bool> analyzeImageForText(
+      String takenImagePath, List<String> texts) async {
     // Debugging
     if (debugMode) {
       log.warning('Debug mode enabled');
       final random = Random().nextDouble();
       if (random < successRatio) {
-        log.trace('Text "$text" found');
+        log.trace('One of these texts "$texts" found');
         return true;
       }
-      log.trace('Text "$text" not found');
+      log.trace('None of these texts "$texts" were found');
       return false;
     }
 
     final result = await _analyzeImage(takenImagePath);
+    log.debug('Found these words on image $result');
 
-    // Everything is lower cased to prevent casing issues
-    if (result.contains(text.toLowerCase())) {
-      log.trace('Text "$text" found');
-      return true; // Match
+    for (String text in texts) {
+      // Everything is lower cased to prevent casing issues
+      if (result.contains(text.toLowerCase())) {
+        log.trace('Text "$text" found');
+        return true; // Match
+      }
     }
-    log.trace('Text "$text" not found');
+    log.trace('None of these texts "$texts" were found');
     return false; // No match
   }
 

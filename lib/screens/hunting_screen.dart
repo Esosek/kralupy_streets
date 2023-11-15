@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/providers/hunting_street_provider.dart';
@@ -20,7 +24,7 @@ class HuntingScreen extends ConsumerStatefulWidget {
 
 class _HuntingScreenState extends ConsumerState<HuntingScreen> {
   final log = CustomLogger('HuntingScreen');
-  final textRecognizer = TextRecognizer(debugMode: true, successRatio: 1);
+  final textRecognizer = TextRecognizer(debugMode: false, successRatio: 1);
   final storage = StorageHelper();
 
   int _selectedStreetIndex = 0;
@@ -59,6 +63,10 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
       preferredCameraDevice: CameraDevice.rear,
     );
 
+    // Debugging text recognizer
+    // final takenPicture = await downloadAndSaveImage(
+    //     'url');
+
     if (takenPicture == null) {
       setState(() {
         _isDecodingImage = false;
@@ -66,7 +74,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
       return;
     }
     final isValidImage = await textRecognizer.analyzeImageForText(
-        takenPicture.path, activeStreet.keyword);
+        takenPicture.path, activeStreet.keywords);
 
     if (isValidImage) {
       String username = '';
@@ -111,6 +119,26 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
       isScrollControlled: true,
       builder: (context) => const FinderModal(),
     );
+  }
+
+  // For debugging purposes
+  Future<File?> downloadAndSaveImage(String imageUrl) async {
+    try {
+      final response = await http.get(Uri.parse(imageUrl));
+      if (response.statusCode == 200) {
+        final directory = await getApplicationCacheDirectory();
+        final filePath = '${directory.path}/image.jpg';
+        final file = File(filePath);
+        await file.writeAsBytes(response.bodyBytes);
+        return file;
+      } else {
+        // Handle HTTP error
+        return null;
+      }
+    } catch (e) {
+      // Handle other exceptions
+      return null;
+    }
   }
 
   @override
