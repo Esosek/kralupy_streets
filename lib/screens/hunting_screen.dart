@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/providers/hunting_street_provider.dart';
 import 'package:kralupy_streets/utils/storage_helper.dart';
+import 'package:kralupy_streets/widgets/finder_modal.dart';
 import 'package:kralupy_streets/widgets/hunting_carousel.dart';
 import 'package:kralupy_streets/widgets/ui/custom_filled_button.dart';
 import 'package:kralupy_streets/utils/custom_logger.dart';
@@ -18,11 +19,9 @@ class HuntingScreen extends ConsumerStatefulWidget {
 }
 
 class _HuntingScreenState extends ConsumerState<HuntingScreen> {
-  static const usernamePrefsKey = 'username';
   final log = CustomLogger('HuntingScreen');
   final textRecognizer = TextRecognizer(debugMode: true, successRatio: 1);
   final storage = StorageHelper();
-  final _usernameTextController = TextEditingController();
 
   int _selectedStreetIndex = 0;
   late HuntingStreet _activeStreet;
@@ -35,19 +34,10 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     final streets = ref.read(huntingStreetProvider);
     _selectedStreetIndex = streets.indexWhere((street) => !street.found);
 
-    _usernameTextController.text =
-        storage.getStringValue(usernamePrefsKey) ?? '';
-
     // Prevents crash when everything is hunted
     if (_selectedStreetIndex.isNegative) {
       _selectedStreetIndex = 0;
     }
-  }
-
-  @override
-  void dispose() {
-    _usernameTextController.dispose();
-    super.dispose();
   }
 
   void _onPageChanged(int index) {
@@ -81,8 +71,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     if (isValidImage) {
       String username = '';
       if (await _isPlayerFirst) {
-        await _showFinderModal();
-        username = _usernameTextController.text.trim();
+        username = await _showFinderModal() ?? '';
       }
       log.info('Street ${activeStreet.name} was successfully hunted');
       ref.read(huntingStreetProvider.notifier).huntStreet(
@@ -114,60 +103,14 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     return !hasFinder;
   }
 
-  Future<void> _showFinderModal() async {
+  Future<String?> _showFinderModal() async {
     return showModalBottomSheet(
       context: context,
       useSafeArea: true,
       isDismissible: false,
       isScrollControlled: true,
-      builder: (context) => Padding(
-        padding: EdgeInsets.fromLTRB(
-            16, 16, 16, MediaQuery.of(context).viewInsets.bottom + 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Gratulujeme!',
-              style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
-                  ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Jste první, kdo ulovil tuto ulici. Vyplňte svou přezdívku a ukažte všem, že právě vy jste tuto záhadu vyřešili!',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _usernameTextController,
-              maxLength: 15,
-              autocorrect: false,
-              decoration: const InputDecoration(
-                label: Text('Přezdívka'),
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Přeskočit'),
-            ),
-            const SizedBox(height: 8),
-            CustomFilledButton(
-              'Odeslat',
-              fitMaxWidth: true,
-              onPressed: _sendFinder,
-            ),
-          ],
-        ),
-      ),
+      builder: (context) => const FinderModal(),
     );
-  }
-
-  void _sendFinder() {
-    final username = _usernameTextController.text;
-    Navigator.of(context).pop();
-    storage.setStringValue(usernamePrefsKey, username);
   }
 
   @override
