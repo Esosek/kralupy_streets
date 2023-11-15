@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kralupy_streets/widgets/hunting_tutorial.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,13 +25,14 @@ class HuntingScreen extends ConsumerStatefulWidget {
 
 class _HuntingScreenState extends ConsumerState<HuntingScreen> {
   final log = CustomLogger('HuntingScreen');
-  final textRecognizer = TextRecognizer(debugMode: false, successRatio: 1);
+  final textRecognizer = TextRecognizer(debugMode: true, successRatio: 1);
   final storage = StorageHelper();
 
   int _selectedStreetIndex = 0;
   late HuntingStreet _activeStreet;
 
   bool _isDecodingImage = false;
+  bool _isTutorialCompleted = false;
 
   @override
   void initState() {
@@ -163,75 +165,79 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
         appBar: AppBar(
           title: const Text('Lovení 12/2023'),
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Flex(
-            direction: isLandscape ? Axis.horizontal : Axis.vertical,
-            mainAxisAlignment: isLandscape
-                ? MainAxisAlignment.spaceBetween
-                : MainAxisAlignment.spaceEvenly,
-            children: [
-              if (!isLandscape) streetLabelWidget,
-              HuntingCarousel(
-                streets,
-                currentIndex: _selectedStreetIndex,
-                scrollDirection: isLandscape ? Axis.vertical : Axis.horizontal,
-                onPageChanged: _onPageChanged,
-              ),
-              const SizedBox(height: 20),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  if (isLandscape) streetLabelWidget,
-                  SizedBox(
-                    height: isLandscape ? null : 55,
-                    child: _activeStreet.found
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'Uloveno ${_activeStreet.foundDate}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge!
-                                    .copyWith(
-                                      color: Colors.grey,
-                                      fontStyle: FontStyle.italic,
+        body: !_isTutorialCompleted
+            ? const HuntingTutorial()
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Flex(
+                  direction: isLandscape ? Axis.horizontal : Axis.vertical,
+                  mainAxisAlignment: isLandscape
+                      ? MainAxisAlignment.spaceBetween
+                      : MainAxisAlignment.spaceEvenly,
+                  children: [
+                    if (!isLandscape) streetLabelWidget,
+                    HuntingCarousel(
+                      streets,
+                      currentIndex: _selectedStreetIndex,
+                      scrollDirection:
+                          isLandscape ? Axis.vertical : Axis.horizontal,
+                      onPageChanged: _onPageChanged,
+                    ),
+                    const SizedBox(height: 20),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        if (isLandscape) streetLabelWidget,
+                        SizedBox(
+                          height: isLandscape ? null : 55,
+                          child: _activeStreet.found
+                              ? Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Uloveno ${_activeStreet.foundDate}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge!
+                                          .copyWith(
+                                            color: Colors.grey,
+                                            fontStyle: FontStyle.italic,
+                                          ),
                                     ),
-                              ),
-                              const SizedBox(height: 7),
-                              if (publicFinder != null)
-                                Text(
-                                  'První ulovil/a ${_activeStreet.finder}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge!
-                                      .copyWith(
-                                        color: Colors.grey,
-                                        fontStyle: FontStyle.italic,
+                                    const SizedBox(height: 7),
+                                    if (publicFinder != null)
+                                      Text(
+                                        'První ulovil/a ${_activeStreet.finder}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge!
+                                            .copyWith(
+                                              color: Colors.grey,
+                                              fontStyle: FontStyle.italic,
+                                            ),
                                       ),
+                                  ],
+                                )
+                              : CustomFilledButton.withIcon(
+                                  'Ulovit',
+                                  icon: Icons.camera_alt_rounded,
+                                  width: 90,
+                                  isLoading: _isDecodingImage,
+                                  onPressed: () => _huntStreet(_activeStreet),
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.primary,
                                 ),
-                            ],
-                          )
-                        : CustomFilledButton.withIcon(
-                            'Ulovit',
-                            icon: Icons.camera_alt_rounded,
-                            width: 90,
-                            isLoading: _isDecodingImage,
-                            onPressed: () => _huntStreet(_activeStreet),
-                            foregroundColor:
-                                Theme.of(context).colorScheme.onPrimary,
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                          ),
-                  ),
-                ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 20),
+                  ],
+                ),
               ),
-              const SizedBox(width: 20),
-            ],
-          ),
-        ),
       ),
     );
   }

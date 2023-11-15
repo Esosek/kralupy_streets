@@ -30,7 +30,7 @@ class TextRecognizer {
     }
 
     final result = await _analyzeImage(takenImagePath);
-    log.debug('Found these words on image $result');
+    log.trace('Found these words on image $result');
 
     for (String text in texts) {
       // Everything is lower cased to prevent casing issues
