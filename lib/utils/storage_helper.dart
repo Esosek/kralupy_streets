@@ -63,12 +63,14 @@ class StorageHelper {
       _setValue<String>(key, value);
   void setListIntValue(String key, List<int> value) =>
       _setValue<List<int>>(key, value);
+  void setBoolValue(String key, bool value) => _setValue<bool>(key, value);
 
   int? getIntValue(String key) => _getValue<int>(key);
   String? getStringValue(String key) => _getValue<String>(key);
   List<int>? getListIntValue(String key) => _getValue<List<int>>(key);
+  bool? getBoolValue(String key) => _getValue<bool>(key);
 
-  // Supported types: int, String, List<int>
+  // Supported types: int, String, List<int>, bool
   void _setValue<T>(String key, T value) {
     try {
       if (value is int) {
@@ -78,6 +80,8 @@ class StorageHelper {
       } else if (value is List<int>) {
         final stringList = value.map((v) => v.toString()).toList();
         _prefs.setStringList(key, stringList);
+      } else if (value is bool) {
+        _prefs.setBool(key, value);
       } else {
         log.error('Trying to setValue for unsupported data type');
       }
@@ -87,7 +91,7 @@ class StorageHelper {
     }
   }
 
-  // Supported types: int, String, List<int>
+  // Supported types: int, String, List<int>, bool
   T? _getValue<T>(String key) {
     log.trace('Fetching $key value');
     try {
@@ -95,6 +99,8 @@ class StorageHelper {
         return _prefs.getInt(key) as T?;
       } else if (T == String) {
         return _prefs.getString(key) as T?;
+      } else if (T == bool) {
+        return _prefs.getBool(key) as T?;
       } else if (T == List<int>) {
         final stringList = _prefs.getStringList(key);
         if (stringList == null) {

@@ -3,7 +3,9 @@ import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
 import 'package:kralupy_streets/widgets/hunting_tutorial_page.dart';
 
 class HuntingTutorial extends StatelessWidget {
-  const HuntingTutorial({super.key});
+  const HuntingTutorial({super.key, required this.onComplete});
+
+  final void Function() onComplete;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,8 @@ class HuntingTutorial extends StatelessWidget {
         Container(),
         Container(),
       ],
-      speed: 2,
+      speed: 1.8,
+      onFinish: onComplete,
       pageBodies: const [
         HuntingTutorialPage(
           title: 'Poznej!',

@@ -24,6 +24,7 @@ class HuntingScreen extends ConsumerStatefulWidget {
 }
 
 class _HuntingScreenState extends ConsumerState<HuntingScreen> {
+  static const tutorialCompletedPrefsKey = 'tutorialCompleted';
   final log = CustomLogger('HuntingScreen');
   final textRecognizer = TextRecognizer(debugMode: true, successRatio: 1);
   final storage = StorageHelper();
@@ -39,6 +40,8 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     super.initState();
     final streets = ref.read(huntingStreetProvider);
     _selectedStreetIndex = streets.indexWhere((street) => !street.found);
+    _isTutorialCompleted =
+        storage.getBoolValue(tutorialCompletedPrefsKey) ?? false;
 
     // Prevents crash when everything is hunted
     if (_selectedStreetIndex.isNegative) {
@@ -123,6 +126,12 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     );
   }
 
+  Future<void> _completeTutorial() async {
+    log.info('Tutorial completed');
+    setState(() => _isTutorialCompleted = true);
+    storage.setBoolValue(tutorialCompletedPrefsKey, true);
+  }
+
   // For debugging purposes
   Future<File?> downloadAndSaveImage(String imageUrl) async {
     try {
@@ -166,7 +175,9 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
           title: const Text('Lovení 12/2023'),
         ),
         body: !_isTutorialCompleted
-            ? const HuntingTutorial()
+            ? HuntingTutorial(
+                onComplete: _completeTutorial,
+              )
             : Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Flex(
