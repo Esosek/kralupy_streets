@@ -173,6 +173,16 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Lovení 12/2023'),
+          actions: [
+            if (_isTutorialCompleted)
+              IconButton(
+                onPressed: () {
+                  log.trace('Tutorial requested by user');
+                  setState(() => _isTutorialCompleted = false);
+                },
+                icon: const Icon(Icons.question_mark_rounded),
+              ),
+          ],
         ),
         body: !_isTutorialCompleted
             ? HuntingTutorial(
