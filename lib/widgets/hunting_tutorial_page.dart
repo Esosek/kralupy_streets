@@ -14,21 +14,30 @@ class HuntingTutorialPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     return Padding(
       padding: const EdgeInsets.all(12),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: Flex(
+        direction: isLandscape ? Axis.horizontal : Axis.vertical,
+        mainAxisAlignment:
+            isLandscape ? MainAxisAlignment.center : MainAxisAlignment.start,
+        crossAxisAlignment:
+            isLandscape ? CrossAxisAlignment.start : CrossAxisAlignment.center,
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height / 4,
+            height:
+                MediaQuery.of(context).size.height / (isLandscape ? 2.5 : 4),
             child: Image.asset(
               imagePath,
             ),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * .1),
+          SizedBox.square(dimension: MediaQuery.of(context).size.height * .1),
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              if (isLandscape)
+                SizedBox(height: MediaQuery.of(context).size.height * .1),
               Text(
                 title,
                 style: Theme.of(context)
@@ -37,9 +46,14 @@ class HuntingTutorialPage extends StatelessWidget {
                     .copyWith(fontWeight: FontWeight.w600, fontSize: 26),
               ),
               const SizedBox(height: 12),
-              Text(
-                body,
-                textAlign: TextAlign.center,
+              SizedBox(
+                width:
+                    isLandscape ? MediaQuery.of(context).size.width / 2 : null,
+                child: Text(
+                  body,
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ],
           ),
