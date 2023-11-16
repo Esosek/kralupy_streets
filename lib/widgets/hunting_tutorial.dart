@@ -39,7 +39,7 @@ class HuntingTutorial extends StatelessWidget {
         HuntingTutorialPage(
           title: 'Ulov!',
           body:
-              'Pokud tvůj snímek odpovídá, ulice se přidá do tvé sbírky. Jsi-li první, kdo ji objevil, zadej svou přezdívku a ukáž všem, že jsi to byl/a ty!',
+              'Pokud tvůj snímek odpovídá, ulice se přidá do tvé sbírky. Jsi-li první, kdo ji objevil, zadej svou přezdívku a ukaž všem, že jsi to byl/a ty!',
           imagePath: 'assets/images/nickname_textfield.png',
         ),
       ],

@@ -79,7 +79,7 @@ class _FinderModalState extends State<FinderModal> {
           ),
           const SizedBox(height: 12),
           Text(
-            'Jste první, kdo ulovil tuto ulici. Vyplňte svou přezdívku a ukažte všem, že právě vy jste tuto záhadu vyřešili!',
+            'Jsi první, kdo ulovil tuto ulici. Vyplň svou přezdívku a ukaž všem, že právě ty jsi tuto záhadu vyřešil!',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 8),
