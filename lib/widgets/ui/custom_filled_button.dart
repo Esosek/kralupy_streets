@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 
 class CustomFilledButton extends StatelessWidget {
-  const CustomFilledButton(this.label,
-      {super.key,
-      required this.onPressed,
-      this.foregroundColor,
-      this.backgroundColor,
-      this.isLoading = false,
-      this.width,
-      this.fitMaxWidth = false})
-      : icon = null;
+  const CustomFilledButton(
+    this.label, {
+    super.key,
+    required this.onPressed,
+    this.foregroundColor,
+    this.backgroundColor,
+    this.isLoading = false,
+    this.width,
+    this.fitMaxWidth = false,
+  }) : icon = null;
 
-  const CustomFilledButton.withIcon(this.label,
-      {super.key,
-      required this.onPressed,
-      required this.icon,
-      this.foregroundColor,
-      this.backgroundColor,
-      this.isLoading = false,
-      this.width,
-      this.fitMaxWidth = false});
+  const CustomFilledButton.withIcon(
+    this.label, {
+    super.key,
+    required this.onPressed,
+    required this.icon,
+    this.foregroundColor,
+    this.backgroundColor,
+    this.isLoading = false,
+    this.width,
+    this.fitMaxWidth = false,
+  });
 
   final String label;
   final void Function() onPressed;

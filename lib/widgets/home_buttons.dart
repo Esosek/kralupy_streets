@@ -6,6 +6,7 @@ import 'package:kralupy_streets/screens/add_street.dart';
 import 'package:kralupy_streets/screens/game_screen.dart';
 import 'package:kralupy_streets/screens/hunting_screen.dart';
 import 'package:kralupy_streets/screens/streets_screen.dart';
+import 'package:kralupy_streets/widgets/ui/animated_filled_button.dart';
 import 'package:kralupy_streets/widgets/ui/custom_filled_button.dart';
 
 class HomeButtons extends ConsumerWidget {
@@ -36,7 +37,7 @@ class HomeButtons extends ConsumerWidget {
         if (huntingStreets.isNotEmpty)
           Container(
             margin: const EdgeInsets.only(bottom: 45),
-            child: CustomFilledButton(
+            child: AnimatedFilledButton(
               'Lovení',
               backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
               onPressed: () => _switchScreen(
