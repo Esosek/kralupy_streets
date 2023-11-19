@@ -111,7 +111,6 @@ class _AddStreetState extends State<AddStreet> {
             '${_streetNameController.text}_latlng=${_geolocation!.latitude},${_geolocation!.longitude}.jpg');
 
     await imageRef.putFile(_streetImage!);
-    _streetImageUrl = await imageRef.getDownloadURL();
     return;
   }
 
@@ -157,6 +156,8 @@ class _AddStreetState extends State<AddStreet> {
                 onPickImage: (selectedPicture) =>
                     _streetImage = selectedPicture,
               ),
+              const SizedBox(height: 16),
+              LocationInput(onLocationSet: _setLocation),
               const SizedBox(height: 12),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -205,8 +206,6 @@ class _AddStreetState extends State<AddStreet> {
                     ),
                 ],
               ),
-              const SizedBox(height: 12),
-              LocationInput(onLocationSet: _setLocation),
             ],
           ),
         ),
