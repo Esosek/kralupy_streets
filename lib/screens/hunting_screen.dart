@@ -1,12 +1,13 @@
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:kralupy_streets/widgets/hunting_tutorial.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:kralupy_streets/widgets/hunting_tutorial.dart';
 import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/providers/hunting_street_provider.dart';
 import 'package:kralupy_streets/utils/storage_helper.dart';
@@ -25,6 +26,7 @@ class HuntingScreen extends ConsumerStatefulWidget {
 
 class _HuntingScreenState extends ConsumerState<HuntingScreen> {
   static const tutorialCompletedPrefsKey = 'tutorialCompleted';
+  static const notificationsTopicName = 'hunting';
   final log = CustomLogger('HuntingScreen');
   final textRecognizer = TextRecognizer(debugMode: true, successRatio: 1);
   final storage = StorageHelper();
@@ -38,6 +40,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
   @override
   void initState() {
     super.initState();
+    _setupNotifications();
     final streets = ref.read(huntingStreetProvider);
     _selectedStreetIndex = streets.indexWhere((street) => !street.found);
     _isTutorialCompleted =
@@ -47,6 +50,12 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     if (_selectedStreetIndex.isNegative) {
       _selectedStreetIndex = 0;
     }
+  }
+
+  void _setupNotifications() async {
+    final fcm = FirebaseMessaging.instance;
+    await fcm.requestPermission();
+    fcm.subscribeToTopic(notificationsTopicName);
   }
 
   void _onPageChanged(int index) {
