@@ -8,11 +8,18 @@ import 'package:kralupy_streets/providers/image_provider.dart';
 
 class StreetImage extends ConsumerWidget {
   const StreetImage(this.street,
-      {this.height, this.condensed = false, super.key});
+      {this.height, this.condensedError = false, super.key});
 
   final Street street;
   final double? height;
-  final bool condensed;
+
+  /// Determines the content to display if fetching fails.
+  ///
+  /// - `true`: Only the failure icon is shown. Use this option with small image containers.
+  /// - `false`: A failure message is displayed.
+  ///
+  /// Defaults to `false`.
+  final bool condensedError;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,7 +38,7 @@ class StreetImage extends ConsumerWidget {
         height: 90,
         width: double.infinity,
         child: Center(
-          child: condensed
+          child: condensedError
               ? const Center(
                   child: Icon(
                     Icons.error_outline_rounded,

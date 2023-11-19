@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,6 +11,7 @@ import 'package:kralupy_streets/widgets/image_input.dart';
 import 'package:kralupy_streets/widgets/location_input.dart';
 
 final db = FirebaseFirestore.instance;
+final fcm = FirebaseMessaging.instance;
 final analytics = FirebaseAnalytics.instance;
 
 class AddStreet extends StatefulWidget {
@@ -28,6 +30,8 @@ class _AddStreetState extends State<AddStreet> {
 
   Geolocation? _geolocation;
   File? _streetImage;
+  String? _streetImageUrl;
+  String? _userToken;
 
   void _setLocation(
       {required Geolocation geolocation, required String streetName}) {
@@ -68,17 +72,17 @@ class _AddStreetState extends State<AddStreet> {
       _isSending = true;
     });
     await _uploadImage();
-    // Uploading image with metadata is enough to add new Streets
-    // await db.collection('suggestions').add(
-    //   {
-    //     'name': _streetNameController.text,
-    //     'geolocation': {
-    //       'lat': _geolocation!.latitude,
-    //       'lng': _geolocation!.longitude,
-    //     },
-    //     'imageUrl': _streetImageUrl,
-    //   },
-    // );
+    await db.collection('suggestions').add(
+      {
+        'name': _streetNameController.text,
+        'geolocation': {
+          'lat': _geolocation!.latitude,
+          'lng': _geolocation!.longitude,
+        },
+        'imageUrl': _streetImageUrl,
+        'deviceId': _userToken ?? '',
+      },
+    );
     if (!context.mounted) {
       return;
     }
@@ -110,9 +114,15 @@ class _AddStreetState extends State<AddStreet> {
     return;
   }
 
+  void _setupNotifications() async {
+    await fcm.requestPermission();
+    _userToken = await fcm.getToken();
+  }
+
   @override
   void initState() {
     super.initState();
+    _setupNotifications();
     _streetNameFocusNode = FocusNode();
   }
 

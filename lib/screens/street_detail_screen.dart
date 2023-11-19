@@ -118,7 +118,20 @@ class StreetDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(street.name),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(street.name),
+            if (street.finder != null)
+              Text(
+                'Ulovil/a ${street.finder}',
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white,
+                    ),
+              ),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         padding: isLandscape

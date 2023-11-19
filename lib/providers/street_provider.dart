@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kralupy_streets/models/geolocation.dart';
 
+import 'package:kralupy_streets/models/geolocation.dart';
 import 'package:kralupy_streets/models/street.dart';
+import 'package:kralupy_streets/providers/hunting_street_provider.dart';
 
 final db = FirebaseFirestore.instance;
 final analytics = FirebaseAnalytics.instance;
@@ -18,6 +19,7 @@ class StreetProvider extends StateNotifier<List<Street>> {
       for (QueryDocumentSnapshot street in streetsData.docs) {
         // Handles database errors
         try {
+          final finder = street['finder'] as String;
           final newStreet = Street(
             id: street['id'],
             name: street['name'],
@@ -29,6 +31,7 @@ class StreetProvider extends StateNotifier<List<Street>> {
               latitude: street['geolocation']['lat'],
               longitude: street['geolocation']['lng'],
             ),
+            finder: finder.isEmpty ? null : finder,
           );
           loadedStreets.add(newStreet);
         } catch (e) {
@@ -44,5 +47,25 @@ class StreetProvider extends StateNotifier<List<Street>> {
   }
 }
 
-final streetProvider = StateNotifierProvider<StreetProvider, List<Street>>(
-    (ref) => StreetProvider());
+final originalStreetProvider =
+    StateNotifierProvider<StreetProvider, List<Street>>(
+        (ref) => StreetProvider());
+
+final enrichedStreetProvider = Provider<List<Street>>((ref) {
+  final publicStreets = ref.watch(originalStreetProvider);
+  final huntingStreets = ref.watch(huntingStreetProvider);
+
+  final transformedHuntingStreets =
+      huntingStreets.where((street) => street.found).map(
+            (street) => Street(
+              id: street.id,
+              name: street.name,
+              imageUrl: street.imageUrl,
+              geolocation: street.geolocation,
+              descriptionParagraphs: street.descriptionParagraphs,
+              finder: street.finder,
+            ),
+          );
+
+  return [...publicStreets, ...transformedHuntingStreets];
+});

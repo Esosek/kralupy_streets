@@ -1,14 +1,16 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:kralupy_streets/utils/custom_logger.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:kralupy_streets/models/street.dart';
 
 class ImageNotifier extends StateNotifier<Map<int, String>> {
   ImageNotifier() : super({});
+
+  final log = CustomLogger('ImageProvider');
 
   Future<String> getImagePath(Street street) async {
     if (state[street.id] == null) {
@@ -32,14 +34,14 @@ class ImageNotifier extends StateNotifier<Map<int, String>> {
         File imageFile = File(filePath);
         await imageFile.writeAsBytes(response.bodyBytes);
 
-        debugPrint('Image downloaded and saved at $filePath');
+        log.trace('Image downloaded and saved at $filePath');
         return filePath;
       } else {
-        debugPrint(
+        log.warning(
             'Failed to download image. HTTP Status Code: ${response.statusCode}');
       }
     } catch (e) {
-      debugPrint('Error downloading image: $e');
+      log.error('Error downloading image: $e');
     }
     return '';
   }

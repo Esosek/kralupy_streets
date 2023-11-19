@@ -30,7 +30,7 @@ class StreetListItem extends ConsumerWidget {
                 child: StreetImage(
                   street,
                   height: 90,
-                  condensed: true,
+                  condensedError: true,
                 ),
               ),
               Positioned(

@@ -10,7 +10,7 @@ class StreetScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final streets = ref.watch(streetProvider);
+    final streets = ref.watch(enrichedStreetProvider);
     bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
 
