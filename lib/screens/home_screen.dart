@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kralupy_streets/providers/hunting_street_provider.dart';
 import 'package:kralupy_streets/providers/street_provider.dart';
 import 'package:kralupy_streets/widgets/home_buttons.dart';
+import 'package:kralupy_streets/widgets/version_text.dart';
 
 final db = FirebaseFirestore.instance;
 final analytics = FirebaseAnalytics.instance;
@@ -86,10 +87,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ],
                         ),
                       ),
-                      Text(
-                        'v$appVersion',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
+                      const VersionText(appVersion),
                     ],
                   ),
                 ),
