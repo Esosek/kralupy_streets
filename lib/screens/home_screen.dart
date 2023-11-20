@@ -9,7 +9,7 @@ import 'package:kralupy_streets/widgets/home_buttons.dart';
 
 final db = FirebaseFirestore.instance;
 final analytics = FirebaseAnalytics.instance;
-const appVersion = '1.2.0';
+const appVersion = '1.2.1';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});

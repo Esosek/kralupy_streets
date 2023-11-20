@@ -28,7 +28,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
   static const tutorialCompletedPrefsKey = 'tutorialCompleted';
   static const notificationsTopicName = 'hunting';
   final log = CustomLogger('HuntingScreen');
-  final textRecognizer = TextRecognizer(debugMode: true, successRatio: 1);
+  final textRecognizer = TextRecognizer(debugMode: false, successRatio: 1);
   final storage = StorageHelper();
 
   int _selectedStreetIndex = 0;
@@ -36,6 +36,13 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
 
   bool _isDecodingImage = false;
   bool _isTutorialCompleted = false;
+
+  String get currentDate {
+    DateTime currentDate = DateTime.now();
+    String formattedDate =
+        '${currentDate.month.toString().padLeft(2, '0')}/${currentDate.year}';
+    return formattedDate;
+  }
 
   @override
   void initState() {
@@ -181,7 +188,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Lovení 12/2023'),
+          title: Text('Lovení $currentDate'),
           actions: [
             if (_isTutorialCompleted)
               IconButton(
