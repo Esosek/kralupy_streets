@@ -10,6 +10,7 @@ class CustomFilledButton extends StatelessWidget {
     this.isLoading = false,
     this.width,
     this.fitMaxWidth = false,
+    this.isThin = false,
   }) : icon = null;
 
   const CustomFilledButton.withIcon(
@@ -22,6 +23,7 @@ class CustomFilledButton extends StatelessWidget {
     this.isLoading = false,
     this.width,
     this.fitMaxWidth = false,
+    this.isThin = false,
   });
 
   final String label;
@@ -31,10 +33,16 @@ class CustomFilledButton extends StatelessWidget {
   final IconData? icon;
   final bool isLoading;
   final double? width;
+
+  /// Expands the button to maximum available space.
   final bool fitMaxWidth;
+
+  /// Removes most of the padding for thin button look
+  final bool isThin;
 
   @override
   Widget build(BuildContext context) {
+    // Default button content without icon
     Widget btnContent = Text(
       label,
       textAlign: TextAlign.center,
@@ -48,7 +56,9 @@ class CustomFilledButton extends StatelessWidget {
       btnContent = const Center(
         child: CircularProgressIndicator(),
       );
-    } else if (icon != null) {
+    }
+    // Button content with icon
+    else if (icon != null) {
       btnContent = Row(
         mainAxisSize: fitMaxWidth ? MainAxisSize.max : MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -69,13 +79,13 @@ class CustomFilledButton extends StatelessWidget {
       onPressed: isLoading ? null : onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: isLoading ? Colors.grey.shade200 : backgroundColor,
+        padding: isThin ? const EdgeInsets.all(0) : null,
+        minimumSize: const Size(50, 36),
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-        child: SizedBox(
-          width: fitMaxWidth ? double.infinity : width,
-          child: btnContent,
-        ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
+        width: fitMaxWidth ? double.infinity : width,
+        child: btnContent,
       ),
     );
   }

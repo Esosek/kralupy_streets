@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kralupy_streets/providers/debugger_provider.dart';
+
 import 'package:kralupy_streets/widgets/ui/custom_filled_button.dart';
 import 'package:kralupy_streets/widgets/ui/custom_switch.dart';
 
@@ -11,8 +13,27 @@ class DebuggerModal extends ConsumerStatefulWidget {
 }
 
 class _DebuggerModalState extends ConsumerState<DebuggerModal> {
+  late double _recognizeSuccessRatio;
+  String get _formattedRecognizeSuccesRatio {
+    return (_recognizeSuccessRatio * 100).toStringAsFixed(0);
+  }
+
+  @override
+  void initState() {
+    _recognizeSuccessRatio =
+        ref.read(debuggerProvider)[DebugOption.recognizeSuccessRatio];
+    super.initState();
+  }
+
+  void _setDebugOption(DebugOption option, dynamic value) {
+    ref.read(debuggerProvider.notifier).toggleSetting(option, value);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final debugOptions = ref.watch(debuggerProvider);
+    final debugEnabled = debugOptions[DebugOption.enabled];
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 8.0),
@@ -25,16 +46,16 @@ class _DebuggerModalState extends ConsumerState<DebuggerModal> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Debug',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
+                    Text('Debug',
+                        style: Theme.of(context).textTheme.titleLarge),
                     const SizedBox(width: 8),
                     CustomFilledButton(
-                      'disabled',
+                      width: 80,
+                      debugEnabled ? 'enabled' : 'disabled',
                       foregroundColor: Colors.white,
-                      backgroundColor: Colors.red,
-                      onPressed: () {},
+                      backgroundColor: debugEnabled ? Colors.green : Colors.red,
+                      onPressed: () =>
+                          _setDebugOption(DebugOption.enabled, !debugEnabled),
                     ),
                   ],
                 ),
@@ -42,51 +63,91 @@ class _DebuggerModalState extends ConsumerState<DebuggerModal> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        children: [
-                          Switch(
-                            value: false,
-                            onChanged: (value) {},
-                          ),
-                          const Text('Load next month hunting'),
-                        ],
+                      CustomSwitch(
+                        label: 'Load next month hunting',
+                        value: debugOptions[DebugOption.loadNextHunt],
+                        onChanged: (value) =>
+                            _setDebugOption(DebugOption.loadNextHunt, value),
                       ),
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Row(
-                            children: [
-                              Switch(
-                                value: false,
-                                onChanged: (value) {},
-                              ),
-                              const Text('Recognize street'),
-                            ],
+                          CustomSwitch(
+                            label: 'Recognize street',
+                            value: debugOptions[DebugOption.recognizeStreet],
+                            onChanged: (value) => _setDebugOption(
+                                DebugOption.recognizeStreet, value),
                           ),
-                          Text(
-                            'Success ratio',
-                            style: Theme.of(context).textTheme.titleSmall,
-                          ),
-                          Slider(
-                            value: 0.5,
-                            onChanged: (value) {},
-                          ),
-                          Text(
-                            '50 %',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
+                          if (debugOptions[DebugOption.recognizeStreet])
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Success ratio',
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
+                                Row(
+                                  children: [
+                                    CustomFilledButton(
+                                      '0',
+                                      isThin: true,
+                                      onPressed: () {
+                                        _setDebugOption(
+                                            DebugOption.recognizeSuccessRatio,
+                                            0);
+                                        setState(() {
+                                          _recognizeSuccessRatio = 0;
+                                        });
+                                      },
+                                    ),
+                                    Expanded(
+                                      child: Slider(
+                                        value: _recognizeSuccessRatio,
+                                        onChanged: (value) => setState(() =>
+                                            _recognizeSuccessRatio = value),
+                                        onChangeEnd: (value) => _setDebugOption(
+                                            DebugOption.recognizeSuccessRatio,
+                                            _recognizeSuccessRatio),
+                                      ),
+                                    ),
+                                    CustomFilledButton(
+                                      '100',
+                                      isThin: true,
+                                      onPressed: () {
+                                        _setDebugOption(
+                                            DebugOption.recognizeSuccessRatio,
+                                            1);
+                                        setState(() {
+                                          _recognizeSuccessRatio = 1;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  '$_formattedRecognizeSuccesRatio %',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                            ),
                         ],
                       ),
                       CustomSwitch(
-                          label: 'Print recognized texts from street image',
-                          value: false,
-                          onChanged: (value) {}),
+                        label: 'Print recognized texts from street image',
+                        value: debugOptions[DebugOption.printRecognizedTexts],
+                        onChanged: (value) => _setDebugOption(
+                            DebugOption.printRecognizedTexts, value),
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
-            CustomFilledButton('Apply', onPressed: () {}),
+            CustomFilledButton('Close', fitMaxWidth: true, onPressed: () {
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
+            }),
           ],
         ),
       ),

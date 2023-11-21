@@ -15,7 +15,7 @@ class VersionText extends StatefulWidget {
 
 class _VersionTextState extends State<VersionText> {
   final log = CustomLogger('Debugger');
-  final _requiredDuration = const Duration(seconds: 3);
+  final _requiredDuration = const Duration(seconds: 1);
 
   bool _isPressed = false;
 
