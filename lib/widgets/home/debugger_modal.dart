@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kralupy_streets/providers/debugger_provider.dart';
 
+import 'package:kralupy_streets/providers/debugger_provider.dart';
+import 'package:kralupy_streets/providers/hunting_provider.dart';
 import 'package:kralupy_streets/widgets/ui/custom_filled_button.dart';
 import 'package:kralupy_streets/widgets/ui/custom_switch.dart';
 
@@ -143,8 +144,9 @@ class _DebuggerModalState extends ConsumerState<DebuggerModal> {
                 ),
               ],
             ),
-            CustomFilledButton('Close', fitMaxWidth: true, onPressed: () {
+            CustomFilledButton('Save', fitMaxWidth: true, onPressed: () {
               if (context.mounted) {
+                ref.read(huntingProvider.notifier).loadHuntingStreets();
                 Navigator.pop(context);
               }
             }),

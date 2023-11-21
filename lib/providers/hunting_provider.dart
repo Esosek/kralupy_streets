@@ -3,13 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kralupy_streets/models/geolocation.dart';
 import 'package:kralupy_streets/models/street.dart';
+import 'package:kralupy_streets/providers/debugger_provider.dart';
 import 'package:kralupy_streets/utils/custom_logger.dart';
 import 'package:kralupy_streets/utils/storage_helper.dart';
 
 final db = FirebaseFirestore.instance;
 
 class HuntingProvider extends StateNotifier<List<HuntingStreet>> {
-  HuntingProvider() : super([]);
+  HuntingProvider(this.debugOptions) : super([]);
+
+  final Map<DebugOption, dynamic> debugOptions;
 
   static const huntTimestampKey = 'huntTimestamp';
   static const huntStreetsIdsKey = 'huntStreetsIds';
@@ -160,6 +163,12 @@ class HuntingProvider extends StateNotifier<List<HuntingStreet>> {
     int millisecondsSinceEpoch = DateTime.now().millisecondsSinceEpoch;
     // Convert to seconds
     int secondsSinceEpoch = (millisecondsSinceEpoch / 1000).round();
+
+    // if debug is enabled add 28 days to current date to get next month hunting
+    if (debugOptions[DebugOption.enabled] &&
+        debugOptions[DebugOption.loadNextHunt]) {
+      secondsSinceEpoch += 2419200;
+    }
     return secondsSinceEpoch;
   }
 
@@ -222,11 +231,12 @@ class HuntingProvider extends StateNotifier<List<HuntingStreet>> {
         },
       ).toList();
     }
-
     return fetchedStreets;
   }
 }
 
 final huntingProvider =
-    StateNotifierProvider<HuntingProvider, List<HuntingStreet>>(
-        (ref) => HuntingProvider());
+    StateNotifierProvider<HuntingProvider, List<HuntingStreet>>((ref) {
+  final debugOptions = ref.watch(debuggerProvider);
+  return HuntingProvider(debugOptions);
+});
