@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:kralupy_streets/providers/debugger_provider.dart';
 import 'package:kralupy_streets/widgets/hunting/hunting_tutorial.dart';
 import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/providers/hunting_provider.dart';
@@ -28,8 +29,9 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
   static const tutorialCompletedPrefsKey = 'tutorialCompleted';
   static const notificationsTopicName = 'hunting';
   final log = CustomLogger('HuntingScreen');
-  final textRecognizer = TextRecognizer(debugMode: false, successRatio: 1);
+  final textRecognizer = TextRecognizer();
   final storage = StorageHelper();
+  late Map<DebugOption, dynamic> debugOptions;
 
   int _selectedStreetIndex = 0;
   late HuntingStreet _activeStreet;
@@ -95,7 +97,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
       return;
     }
     final isValidImage = await textRecognizer.analyzeImageForText(
-        takenPicture.path, activeStreet.keywords);
+        takenPicture.path, activeStreet.keywords, debugOptions);
 
     if (isValidImage) {
       String username = '';
@@ -176,6 +178,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     final publicFinder = _activeStreet.finder?.trim();
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
+    debugOptions = ref.watch(debuggerProvider);
 
     final streetLabelWidget = Text(
       streetName,

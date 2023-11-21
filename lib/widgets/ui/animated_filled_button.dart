@@ -36,6 +36,12 @@ class _AnimatedFilledButtonState extends State<AnimatedFilledButton>
   }
 
   @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _animation,

@@ -1,32 +1,25 @@
 import 'dart:math';
 
 import 'package:flutter/services.dart';
+import 'package:kralupy_streets/providers/debugger_provider.dart';
 
 import 'package:kralupy_streets/utils/custom_logger.dart';
 
 /// debugMode randomly decides on the result based on set successRatio
 class TextRecognizer {
-  TextRecognizer({this.debugMode = false, this.successRatio = .5});
-
-  final bool debugMode;
-  final double successRatio;
+  TextRecognizer();
 
   static const platform =
       MethodChannel('com.example.kralupy_streets/text_recognition');
   final log = CustomLogger('TextRecognizer');
 
-  Future<bool> analyzeImageForText(
-      String takenImagePath, List<String> texts) async {
+  Future<bool> analyzeImageForText(String takenImagePath, List<String> texts,
+      [Map<DebugOption, dynamic>? debugOptions]) async {
     // Debugging
-    if (debugMode) {
-      log.warning('Debug mode enabled');
-      final random = Random().nextDouble();
-      if (random < successRatio) {
-        log.trace('One of these texts "$texts" found');
-        return true;
-      }
-      log.trace('None of these texts "$texts" were found');
-      return false;
+    if (debugOptions != null &&
+        debugOptions[DebugOption.enabled] &&
+        debugOptions[DebugOption.recognizeStreet]) {
+      return _debug(debugOptions[DebugOption.recognizeSuccessRatio], texts);
     }
 
     final result = await _analyzeImage(takenImagePath);
@@ -54,5 +47,16 @@ class TextRecognizer {
       log.error(e.message ?? 'Analyzing image failed');
       return [];
     }
+  }
+
+  bool _debug(double successRatio, List<String> texts) {
+    log.warning('Debug mode enabled');
+    final random = Random().nextDouble();
+    if (random < successRatio) {
+      log.trace('One of these texts "$texts" found');
+      return true;
+    }
+    log.trace('None of these texts "$texts" were found');
+    return false;
   }
 }
