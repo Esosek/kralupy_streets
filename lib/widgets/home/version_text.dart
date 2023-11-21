@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
 import 'package:kralupy_streets/utils/custom_logger.dart';
-import 'package:kralupy_streets/widgets/debugger_modal.dart';
+import 'package:kralupy_streets/widgets/home/debugger_modal.dart';
 
 class VersionText extends StatefulWidget {
   const VersionText(this.version, {super.key});
@@ -15,7 +16,7 @@ class VersionText extends StatefulWidget {
 
 class _VersionTextState extends State<VersionText> {
   final log = CustomLogger('Debugger');
-  final _requiredDuration = const Duration(seconds: 1);
+  final _requiredDuration = const Duration(seconds: 3);
 
   bool _isPressed = false;
 

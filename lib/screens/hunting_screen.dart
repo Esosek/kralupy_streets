@@ -7,12 +7,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:kralupy_streets/widgets/hunting_tutorial.dart';
+import 'package:kralupy_streets/widgets/hunting/hunting_tutorial.dart';
 import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/providers/hunting_street_provider.dart';
 import 'package:kralupy_streets/utils/storage_helper.dart';
-import 'package:kralupy_streets/widgets/finder_modal.dart';
-import 'package:kralupy_streets/widgets/hunting_carousel.dart';
+import 'package:kralupy_streets/widgets/hunting/finder_modal.dart';
+import 'package:kralupy_streets/widgets/hunting/hunting_carousel.dart';
 import 'package:kralupy_streets/widgets/ui/custom_filled_button.dart';
 import 'package:kralupy_streets/utils/custom_logger.dart';
 import 'package:kralupy_streets/utils/text_recognizer.dart';

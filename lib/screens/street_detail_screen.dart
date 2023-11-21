@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/utils/api_keys.dart';
-import 'package:kralupy_streets/widgets/street_image.dart';
+import 'package:kralupy_streets/widgets/ui/street_image.dart';
 
 final analytics = FirebaseAnalytics.instance;
 

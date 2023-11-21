@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kralupy_streets/models/question.dart';
 import 'package:kralupy_streets/screens/game_screen.dart';
 import 'package:kralupy_streets/screens/street_detail_screen.dart';
-import 'package:kralupy_streets/widgets/street_sign.dart';
+import 'package:kralupy_streets/widgets/ui/street_sign.dart';
 
 class ResultsScreen extends StatelessWidget {
   const ResultsScreen({

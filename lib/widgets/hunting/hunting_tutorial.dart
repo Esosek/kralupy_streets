@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
-import 'package:kralupy_streets/widgets/hunting_tutorial_page.dart';
+import 'package:kralupy_streets/widgets/hunting/hunting_tutorial_page.dart';
 
 class HuntingTutorial extends StatelessWidget {
   const HuntingTutorial({super.key, required this.onComplete});

@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kralupy_streets/providers/hunting_street_provider.dart';
 import 'package:kralupy_streets/providers/street_provider.dart';
-import 'package:kralupy_streets/widgets/home_buttons.dart';
-import 'package:kralupy_streets/widgets/version_text.dart';
+import 'package:kralupy_streets/widgets/home/home_buttons.dart';
+import 'package:kralupy_streets/widgets/home/version_text.dart';
 
 final db = FirebaseFirestore.instance;
 final analytics = FirebaseAnalytics.instance;

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/screens/street_detail_screen.dart';
-import 'package:kralupy_streets/widgets/street_image.dart';
+import 'package:kralupy_streets/widgets/ui/street_image.dart';
 
 class StreetListItem extends ConsumerWidget {
   const StreetListItem(this.street, {super.key});

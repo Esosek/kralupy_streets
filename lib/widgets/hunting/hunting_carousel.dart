@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:kralupy_streets/models/street.dart';
-import 'package:kralupy_streets/widgets/street_image.dart';
+import 'package:kralupy_streets/widgets/ui/street_image.dart';
 
 class HuntingCarousel extends StatelessWidget {
   const HuntingCarousel(

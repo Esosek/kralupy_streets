@@ -7,8 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:kralupy_streets/models/geolocation.dart';
-import 'package:kralupy_streets/widgets/image_input.dart';
-import 'package:kralupy_streets/widgets/location_input.dart';
+import 'package:kralupy_streets/widgets/ui/image_input.dart';
+import 'package:kralupy_streets/widgets/ui/location_input.dart';
 
 final db = FirebaseFirestore.instance;
 final fcm = FirebaseMessaging.instance;

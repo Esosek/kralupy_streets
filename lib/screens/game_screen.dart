@@ -7,8 +7,8 @@ import 'package:kralupy_streets/models/street.dart';
 import 'package:kralupy_streets/providers/street_provider.dart';
 import 'package:kralupy_streets/screens/results_screen.dart';
 import 'package:kralupy_streets/utils/quiz_generator.dart';
-import 'package:kralupy_streets/widgets/street_image.dart';
-import 'package:kralupy_streets/widgets/street_sign.dart';
+import 'package:kralupy_streets/widgets/ui/street_image.dart';
+import 'package:kralupy_streets/widgets/ui/street_sign.dart';
 
 final analytics = FirebaseAnalytics.instance;
 
