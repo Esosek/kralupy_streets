@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:kralupy_streets/widgets/hunting/hunting_tutorial.dart';
 import 'package:kralupy_streets/models/street.dart';
-import 'package:kralupy_streets/providers/hunting_street_provider.dart';
+import 'package:kralupy_streets/providers/hunting_provider.dart';
 import 'package:kralupy_streets/utils/storage_helper.dart';
 import 'package:kralupy_streets/widgets/hunting/finder_modal.dart';
 import 'package:kralupy_streets/widgets/hunting/hunting_carousel.dart';
@@ -48,7 +48,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
   void initState() {
     super.initState();
     _setupNotifications();
-    final streets = ref.read(huntingStreetProvider);
+    final streets = ref.read(huntingProvider);
     _selectedStreetIndex = streets.indexWhere((street) => !street.found);
     _isTutorialCompleted =
         storage.getBoolValue(tutorialCompletedPrefsKey) ?? false;
@@ -103,7 +103,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
         username = await _showFinderModal() ?? '';
       }
       log.info('Street ${activeStreet.name} was successfully hunted');
-      ref.read(huntingStreetProvider.notifier).huntStreet(
+      ref.read(huntingProvider.notifier).huntStreet(
             activeStreet.id,
             username.isEmpty ? null : username,
           );
@@ -126,9 +126,8 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
   }
 
   Future<bool> get _isPlayerFirst async {
-    final hasFinder = await ref
-        .read(huntingStreetProvider.notifier)
-        .hasFinder(_activeStreet.id);
+    final hasFinder =
+        await ref.read(huntingProvider.notifier).hasFinder(_activeStreet.id);
     return !hasFinder;
   }
 
@@ -170,7 +169,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final streets = ref.watch(huntingStreetProvider);
+    final streets = ref.watch(huntingProvider);
     _activeStreet = streets[_selectedStreetIndex];
     final isFound = _activeStreet.found;
     final streetName = isFound ? _activeStreet.name : '???';

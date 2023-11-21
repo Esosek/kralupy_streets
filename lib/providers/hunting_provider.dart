@@ -8,8 +8,8 @@ import 'package:kralupy_streets/utils/storage_helper.dart';
 
 final db = FirebaseFirestore.instance;
 
-class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
-  HuntingStreetProvider() : super([]);
+class HuntingProvider extends StateNotifier<List<HuntingStreet>> {
+  HuntingProvider() : super([]);
 
   static const huntTimestampKey = 'huntTimestamp';
   static const huntStreetsIdsKey = 'huntStreetsIds';
@@ -227,6 +227,6 @@ class HuntingStreetProvider extends StateNotifier<List<HuntingStreet>> {
   }
 }
 
-final huntingStreetProvider =
-    StateNotifierProvider<HuntingStreetProvider, List<HuntingStreet>>(
-        (ref) => HuntingStreetProvider());
+final huntingProvider =
+    StateNotifierProvider<HuntingProvider, List<HuntingStreet>>(
+        (ref) => HuntingProvider());

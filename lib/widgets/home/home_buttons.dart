@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:kralupy_streets/providers/hunting_street_provider.dart';
+import 'package:kralupy_streets/providers/hunting_provider.dart';
 import 'package:kralupy_streets/screens/add_street.dart';
 import 'package:kralupy_streets/screens/game_screen.dart';
 import 'package:kralupy_streets/screens/hunting_screen.dart';
@@ -22,7 +22,7 @@ class HomeButtons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final huntingStreets = ref.watch(huntingStreetProvider);
+    final huntingStreets = ref.watch(huntingProvider);
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [

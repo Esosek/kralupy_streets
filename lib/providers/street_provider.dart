@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kralupy_streets/models/geolocation.dart';
 import 'package:kralupy_streets/models/street.dart';
-import 'package:kralupy_streets/providers/hunting_street_provider.dart';
+import 'package:kralupy_streets/providers/hunting_provider.dart';
 
 final db = FirebaseFirestore.instance;
 final analytics = FirebaseAnalytics.instance;
@@ -53,7 +53,7 @@ final originalStreetProvider =
 
 final enrichedStreetProvider = Provider<List<Street>>((ref) {
   final publicStreets = ref.watch(originalStreetProvider);
-  final huntingStreets = ref.watch(huntingStreetProvider);
+  final huntingStreets = ref.watch(huntingProvider);
 
   final transformedHuntingStreets =
       huntingStreets.where((street) => street.found).map(
