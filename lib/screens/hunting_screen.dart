@@ -73,7 +73,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
     });
   }
 
-  void _huntStreet(HuntingStreet activeStreet) async {
+  void _huntStreet(BuildContext context, HuntingStreet activeStreet) async {
     setState(() {
       _isDecodingImage = true;
     });
@@ -97,7 +97,7 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
       return;
     }
     final isValidImage = await textRecognizer.analyzeImageForText(
-        takenPicture.path, activeStreet.keywords, debugOptions);
+        takenPicture.path, activeStreet.keywords, debugOptions, context);
 
     if (isValidImage) {
       String username = '';
@@ -264,7 +264,8 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
                                   icon: Icons.camera_alt_rounded,
                                   width: 90,
                                   isLoading: _isDecodingImage,
-                                  onPressed: () => _huntStreet(_activeStreet),
+                                  onPressed: () =>
+                                      _huntStreet(context, _activeStreet),
                                   foregroundColor:
                                       Theme.of(context).colorScheme.onPrimary,
                                   backgroundColor:
