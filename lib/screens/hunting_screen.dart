@@ -96,8 +96,10 @@ class _HuntingScreenState extends ConsumerState<HuntingScreen> {
       });
       return;
     }
-    final isValidImage = await textRecognizer.analyzeImageForText(
-        takenPicture.path, activeStreet.keywords, debugOptions, context);
+    final isValidImage = context.mounted
+        ? await textRecognizer.analyzeImageForText(
+            takenPicture.path, activeStreet.keywords, debugOptions, context)
+        : false;
 
     if (isValidImage) {
       String username = '';
